@@ -4,7 +4,7 @@ include('DBconn.php');
 @$PassWord=$_POST['PassWord'];
 
 $success=0;
-$result = mysql_query("SELECT * FROM Admin");
+$result = mysql_query("SELECT * FROM admin");
 while($row = mysql_fetch_array($result))
   {
   	if($row['UserName']==$UserName){
@@ -16,7 +16,7 @@ while($row = mysql_fetch_array($result))
   	}
   	
   }
-$result = mysql_query("SELECT * FROM Repairman");
+$result = mysql_query("SELECT * FROM repairman");
 while($row = mysql_fetch_array($result))
   {
   	if($row['UserName']==$UserName){
