@@ -56,7 +56,8 @@
          },
          success: function(data, textStatus, xhr) {
              //called when successful
-             console.log(data);
+             var data1=eval('data');
+             console.log(data1);
          },
          error: function(xhr, textStatus, errorThrown) {
              //called when there is an error
@@ -147,7 +148,8 @@
          },
          success: function(data, textStatus, xhr) {
              //called when successful
-             console.log(data);
+              var data1=eval('data');
+             console.log(data1);
          },
          error: function(xhr, textStatus, errorThrown) {
              //called when there is an error
@@ -195,7 +197,7 @@
  	}
  */
  function getBuildingInfo(data) {
-     var url = './php/login.php';
+     var url = './php/getBuildingInfo.php';
      jQuery.ajax({
          url: url,
          data: data,
@@ -206,7 +208,8 @@
          },
          success: function(data, textStatus, xhr) {
              //called when successful
-             console.log(data);
+             var data1=eval('data');
+             console.log(data1);
          },
          error: function(xhr, textStatus, errorThrown) {
              //called when there is an error

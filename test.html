@@ -3,16 +3,30 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Document</title>
-	<script type="text/javascript" src="js/jquery-1.12.0.min.js"></script>
-	<script type="text/javascript" src="js/backstageConn.js"></script>
+	<script type="text/javascript" src="js/jquery-1.12.0.min.js" charset="utf_8"></script>
+	<script type="text/javascript" src="js/backstageConn.js"  charset="utf_8"></script>
 </head>
 <body>
 	<script type="text/javascript">
 	var data={
 		UserName:"boss",
-		PassWord:123
+		PassWord:123,
+	}
+	var order={
+	   PlaceInfo:"52-112",
+             EventInfo:"水龙头漏水"	
+	}
+	var order2={
+		W_ID:12
 	}
 	login(data);
+	getWorkOrder();
+        // finishWorkOrder(order2);
+        getBuildingInfo_All();
+        var order3={
+        	B_ID:1
+        }
+        getBuildingInfo(order3);
 	</script>
 </body>
 </html>
