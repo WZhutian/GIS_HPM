@@ -9,7 +9,7 @@ while($row = mysql_fetch_array($result))
       $New_arr["EventInfo"]=$row["EventInfo"];
       $New_arr["Time"]=$row["Time"];
       $New_arr["Done"]=$row["Done"];
-      $data[$row["ID"]]=$New_arr;
+      $data[$row["W_ID"]]=$New_arr;
   }
   $json_data=json_encode($data);
   echo $json_data;

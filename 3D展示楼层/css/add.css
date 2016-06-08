@@ -1,0 +1,120 @@
+.Floor_line {
+    position: absolute;
+    width: 2px;
+    background-color: red;
+}
+
+#autoMap {
+    top: 5px;
+    left: 20px;
+    width: 500px;
+    height: 50px;
+}
+
+.cd-product-intro {
+    background-color: gray;
+    left: -200px;
+    height: 400px;
+    border-radius: 20px;
+    text-align: center;
+}
+
+#legend-pannel {
+    position: fixed;
+    top: 9%;
+    left: 3%;
+    background-color: gray;
+    width: 24%;
+    height: 800px;
+    display: none;
+    border-radius: 20px;
+}
+
+#roomInfo-pannel {
+    text-align: center;
+    position: fixed;
+    top: 9%;
+    right: 3%;
+    background-color: gray;
+    width: 30%;
+    height: 800px;
+    display: none;
+    border-radius: 20px;
+}
+
+.room-legend {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background-color: blue;
+    border-radius: 100px;
+}
+
+.room-legend:hover {
+    cursor: pointer;
+}
+
+#legend-pannel li {
+    width: 33.3%;
+    float: left;
+}
+
+
+/*————————————————拖拽————————————————————*/
+
+.box-legend {
+    position: relative;
+    background: #fa0;
+    border-radius: 100px;
+    z-index: 10;
+    margin: 35px auto 20px;
+    width: 50px;
+    height: 50px;
+}
+
+.box-legend {}
+
+.box-legend:hover {
+    cursor: move;
+}
+
+.box-legend.is-pointer-down {
+    background: #09F;
+}
+
+.box-legend.is-dragging {
+    opacity: 0.7;
+}
+
+.text-legend {
+    position: relative;
+    background: #fa0;
+    border-radius: 10px;
+    z-index: 1;
+    margin: 0 auto;
+    width: 100px;
+    height: 30px;
+}
+
+.draggable {
+    width: 140px;
+    height: 140px;
+    background: #F90;
+    border-radius: 10px;
+    margin: 0 10px 10px 0;
+    float: left;
+}
+
+.draggable.is-pointer-down {
+    background: #09F;
+    z-index: 120;
+    /* above other draggies */
+}
+
+.showInArea {
+    -webkit-transition: border linear .2s, -webkit-box-shadow linear .5s;
+    -webkit-box-shadow: 0 0 18px #F24D0C;
+}
+
+
+/*———————————————————————————————————*/
