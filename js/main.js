@@ -14,8 +14,6 @@ jQuery(document).ready(function($) {
 
     }
     WZT.initPannel = function() {
-        //初始化图例板
-
         //初始化1号展示板
 
         //初始化楼层平台大小
