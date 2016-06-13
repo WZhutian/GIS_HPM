@@ -5,15 +5,48 @@ jQuery(document).ready(function($) {
     WZT.Data = {}; //用来保存后台回去的所有数据
     WZT.AllRecored = {}; //用来暂存临时变量
     WZT.Data.Floors = 6; //总楼层数
+    WZT.status = 0; //初始页面
     /*
     第一部分：后台数据获取
     1、获取图例，初始化图例板，
     2、获取楼层数据：
 */
     WZT.getData = function() {
-
+        //从url中获取楼ID
+        function GetQueryString() {
+            var r = window.location.search.substr(1); //获取url中"?"符后的字符串
+            var context = r.split('&');
+            WZT.Data.BuildingID = context[0].split('=')[1];
+        }
+        GetQueryString();
+        //从后台获取数据，
+        function getBuildingInfo(data) {
+            var url = './php/getBuildingInfo.php';
+            jQuery.ajax({
+                url: url,
+                data: data,
+                type: 'POST',
+                // dataType: 'json',
+                complete: function(xhr, textStatus) {
+                    //called when complete
+                },
+                success: function(data, textStatus, xhr) {
+                    //called when successful
+                    var data1 = eval('data');
+                    console.log(data1);
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    //called when there is an error
+                }
+            });
+        }
+        // getBuildingInfo(WZT.Data.BuildingID);
     }
+    WZT.getData();
+
     WZT.initPannel = function() {
+        //鼠标移动展示事件
+        // $("p").hover(function(){
         //初始化1号展示板
 
         //初始化楼层平台大小
@@ -25,10 +58,12 @@ jQuery(document).ready(function($) {
             pic_real_height = this.height; // work for in memory images.
 
             console.log(pic_real_height, pic_real_width)
-            var widthNew = pic_real_width / (750 / 1334 * pic_real_height) * 100 + "%";
-            console.log(widthNew)
-            $(".cd-start").css('width', widthNew);
-            $(".cd-3d-bottom-side").css('width', widthNew);
+            WZT.widthNew = pic_real_width / (750 / 1334 * pic_real_height) * 100 + "%";
+            WZT.heightNew = pic_real_height / pic_real_width * 440 + "px";
+            $(".cd-start").css('width', WZT.widthNew);
+            $(".cd-3d-bottom-side").css('width', WZT.widthNew);
+            WZT.topChange = 800 / parseInt(WZT.heightNew);
+            WZT.widthChange = parseInt(WZT.widthNew) / (440 / 450) / 100;
         });
         //初始化每层楼的展示板
     }
@@ -43,7 +78,7 @@ jQuery(document).ready(function($) {
         WZT.AllRecored.heightEvery = 930 - WZT.Data.Floors * 6;
         $("#cd-floor-0").css("top", WZT.AllRecored.zeroTop);
         for (var i = 1; i < WZT.Data.Floors; i++) {
-            var addFloorDom = "<div id='cd-floor-" + i + "' class='cd-product-mockup container' style=top:" + (WZT.AllRecored.zeroTop - i * WZT.AllRecored.heightEvery) + "px;><div class='cd-start'></div><ul></ul><div class='cd-3d-right-side'></div><div class='cd-3d-bottom-side'></div></div>";
+            var addFloorDom = "<div id='cd-floor-" + i + "' class='cd-product-mockup' style=top:" + (WZT.AllRecored.zeroTop - i * WZT.AllRecored.heightEvery) + "px;><div class='cd-start container'></div><ul></ul><div class='cd-3d-right-side'></div><div class='cd-3d-bottom-side'></div></div>";
             $('.cd-product').append(addFloorDom);
         }
     }
@@ -55,45 +90,69 @@ jQuery(document).ready(function($) {
         WZT.edit_Floor = idName[idName.length - 1];
         WZT.hideBuildingIcon(WZT.edit_Floor, WZT.Data.Floors);
         //修改事件绑定
-        $('.cd-start').unbind('click', WZT.buildingChooseAni);
-        event.preventDefault();
+        $('.cd-start').unbind();
+        // event.preventDefault();
         //
         var landuo = [151, 135, 124, 119, 120, 127, 140, 159, 184, 215];
         var domName = "#cd-floor-";
         WZT.AllRecored.BuildingSelectTop = parseInt($(this).parent().css('top'));
         var calculate = WZT.AllRecored.BuildingSelectTop - ((WZT.Data.Floors - 1) / 2 - WZT.edit_Floor) * (WZT.AllRecored.heightEvery - 800) - landuo[WZT.Data.Floors - 1];
         $(domName + WZT.edit_Floor).animate({ top: calculate + "px" }, 400, function() {
-
             //这段代码不要去动,转动
             var mq = window.getComputedStyle(document.querySelector('.cd-product-intro'), '::before').getPropertyValue('content');
             if (mq == 'mobile') {
                 $('body,html').animate({ 'scrollTop': $($(this).attr('href')).offset().top }, 200);
             } else {
                 $('.cd-product').addClass('is-product-tour').one('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', function() {
-                    $('.cd-close-product-tour').addClass('is-visible');
-                    // $('.cd-points-container').addClass('points-enlarged').one('webkitAnimationEnd oanimationend msAnimationEnd animationend', function() {
-                    //     $(this).addClass('points-pulsing');
-                    // });
-                    $('#legend-pannel').show(300);
-                    $('#roomInfo-pannel').show(300);
+
+                    if (WZT.status == 0) {
+                        $('.cd-close-product-tour').addClass('is-visible');
+                        // $('.cd-points-container').addClass('points-enlarged').one('webkitAnimationEnd oanimationend msAnimationEnd animationend', function() {
+                        //     $(this).addClass('points-pulsing');
+                        // });
+                        $('#legend-pannel').show(300);
+                        $('#roomInfo-pannel').show(300);
+                        $(domName + WZT.edit_Floor + ' div:first').animate({ 'width': '440px', 'height': WZT.heightNew })
+                        $(".cd-product-mockup").css({
+                            'overflow-y': 'scroll',
+                            'overflow-x': 'hidden'
+                        });
+                        //点位置变化函数
+                        $(".room-legend").each(function() {
+                            $(this).animate({ 'top': parseInt($(this).css('top')) / WZT.topChange + 'px', 'left': parseInt($(this).css('left')) / WZT.widthChange + 'px', 'height': '50px', 'width': '50px' })
+                        });
+                    }
+
                 });
             }
         });
-
     }
+    console.log(2)
     $('.cd-start').on('click', WZT.buildingChooseAni); //绑定点击事件
     //返回楼层选择
     $('.cd-close-product-tour').on('click', function() {
+        $('.cd-start').animate({ 'width': WZT.widthNew, 'height': '800px' }, 100)
         $('.cd-product').removeClass('is-product-tour');
         $('.cd-close-product-tour').removeClass('is-visible');
         // $('.cd-points-container').removeClass('points-enlarged points-pulsing');
         $('.cd-product-mockup').css('visibility', 'visible');
         WZT.showBuildingIcon(WZT.edit_Floor, WZT.Data.Floors);
-        $('.cd-start').bind('click', WZT.buildingChooseAni);
         $('#legend-pannel').hide(400);
         $('#roomInfo-pannel').hide(400);
         $(WZT.Area.lastDrag).css({ 'top': 0, "left": 0 });
         $(".cd-start").removeClass("showInArea");
+        $(".cd-product-mockup").css({
+            'overflow-y': '',
+            'overflow-x': ''
+        });
+        //点位置变化函数
+        WZT.status = 0;
+        setTimeout(function() {
+            $('.cd-start').bind('click', WZT.buildingChooseAni);
+        }, 800)
+        $(".room-legend").each(function() {
+            $(this).css({ 'top': parseFloat($(this).css('top')) * WZT.topChange + 'px', 'left': parseFloat($(this).css('left')) * WZT.widthChange + 'px', 'height': 50 * WZT.topChange + 'px', 'width': 50 * WZT.widthChange + 'px' });
+        });
     });
     //其他楼层动画
     WZT.showBuildingIcon = function(num, sum) {
@@ -212,9 +271,7 @@ jQuery(document).ready(function($) {
                 addNewLegend(this); //在楼层图片上添加新的图例
                 $(this).css({ 'top': 0, "left": 0 });
                 WZT.Area.status = 3;
-
             }
-
         })
     }
 
@@ -228,7 +285,7 @@ jQuery(document).ready(function($) {
         var x1 = $(dom).offset().left;
         var y1 = $(dom).offset().top;
         var domName = '<li class="room-legend" style="top:' + (y1 - Y1) + 'px;left:' + (x1 - X1) + 'px;"></li>'
-       
+
         $("#cd-floor-" + WZT.edit_Floor + " ul").append(domName);
 
         //后台添加，返回ID， TODO
