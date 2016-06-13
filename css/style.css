@@ -24,6 +24,7 @@ body {
   font-family: "Bitter", serif;
   color: #a29cc2;
   background-image: url("../img/map_bg.jpg");
+  background-attachment:fixed;
   background-repeat: no-repeat; 
   background-size: 100%;
   overflow-x: hidden;
@@ -184,7 +185,7 @@ Main components
 }
 
 .cd-product-mockup {
-  right:150px;
+  right:50px;
   width: 90%;
   /* set here the max-width for the mockup */
   max-width: 450px;
@@ -237,7 +238,7 @@ Main components
     width: 0;
     /* play with these values to create a realistic shadow */
     height: 45%;
-    box-shadow: 0px 0px 30px 225px rgba(0, 0, 0, 0.1);
+    /*box-shadow: 0px 0px 30px 225px rgba(0, 0, 0, 0.1);*/
     -webkit-transform: translateZ(-100px) translateY(480px);
     -moz-transform: translateZ(-100px) translateY(480px);
     -ms-transform: translateZ(-100px) translateY(480px);
@@ -350,9 +351,9 @@ Main components
 @media only screen and (min-width: 1170px) {
   .cd-close-product-tour {
     display: block;
-    position: absolute;
+    position: fixed;
     top: 30px;
-    right: 330px;
+    right: 35%;
     height: 40px;
     width: 40px;
     opacity: 0;
