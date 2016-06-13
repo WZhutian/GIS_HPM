@@ -330,7 +330,7 @@
  	删除房间信息
  	参数
  	{
- 		"B_ID":
+ 		"R_ID":
  	}
  */
  function deRoom(data) {

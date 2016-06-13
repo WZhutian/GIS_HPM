@@ -2,7 +2,6 @@
 include('DBconn.php');
 @$UserName=$_POST['UserName'];
 @$PassWord=$_POST['PassWord'];
-
 $success=0;
 $result = mysql_query("SELECT * FROM admin");
 while($row = mysql_fetch_array($result))
