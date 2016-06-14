@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width">
+    <title>垃圾箱管理</title>
+    <!-- <link rel="stylesheet" href="http://openlayers.org/en/v3.16.0/css/ol.css" type="text/css">
+  -->
+    <script src="http://openlayers.org/en/v3.16.0/build/ol.js"></script>
+    <link rel="stylesheet" type="text/css" href="font/titillium/stylesheet.css">
+    <link rel="stylesheet" type="text/css" href="font/exo-demibold/stylesheet.css">
+    <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="css/resetpage1.css">
+    <link rel="stylesheet" type="text/css" href="css/animation.css">
+    <link rel="stylesheet" type="text/css" href="css/blue/responsive.css">
+    <link rel="stylesheet" type="text/css" href="css/blue/color.css">
+    <link rel="stylesheet" type="text/css" href="css/live-preview.css">
+    <link rel="stylesheet" type="text/css" href="live-font/stylesheet.css">
+    <script type="text/javascript" src="js/modernizr.custom.29473.js"></script>
+    <script type="text/javascript" src="js/jquery-1.12.0.min.js"></script>
+    <script type="text/javascript" src="js/dropdown.js"></script>
+    <link rel="stylesheet" href="assets/ol3/css/ol.css" type="text/css">
+    <!-- <link rel="stylesheet" href="assets/css/styles.css" type="text/css"> -->
+    <script src='https://rawgit.com/Turfjs/turf/v2.0.2/turf.min.js'></script>
+    <!-- <script stc="assets/js/olnew.js"></script>
+-->
+    <!-- <script src="assets/ol3/js/ol-debug.js"></script>
+-->
+    <script src="assets/js/es6-promise.min.js"></script>
+    <script src="assets/js/fetch.js"></script>
+    <script src="assets/js/helpers.js"></script>
+    <style type="text/css">
+      html,body{
+        width: 100%;
+        height:100%;
+      }
+    </style>
+</head>
+
+<body>
+    <!-- <div id="map" class="map" ></div>
+-->
+    <!-- <a href="index.html">返回主页</a> -->
+    <ul class="nav" style="position:fixed;">
+        <!-- Start Home -->
+        <li id="first">
+            <div id="cover1"><a href="3d/buildingsdemo.html">三维校园<i class="icon-chevron-down"></i></a></div>
+            <div id="icon"><i class="icon-home"></i></div>
+            <ul class="one" id="home">
+                <li>
+                    <h3><i class="icon-user"></i>Welcome</h3>
+                    <p id="p-first">中国地质大学（武汉）位于武汉东湖国家自主创新示范区腹地。学校拥有国家4A级旅游景区——逸夫博物馆，是全国文明单位、湖北省最佳文明单位。校园环境优美，教育、科研、学术氛围浓厚，拥有现代化的教学楼群、图书馆、学生公寓和近万台随时上网的计算机等相关配套设施，为莘莘学子提供了良好的学习、生活和成长的环境。</p>
+                    <!-- <img src="img/didalogo.png"> -->
+                    <a href="http://www.cug.edu.cn/new/">中国地质大学</a>
+                </li>
+            </ul>
+        </li>
+        <!-- Start Portfolio -->
+        <li>
+            <div id="cover1"><a href="#">报修管理<i class="icon-chevron-down"></i></a></div>
+            <div id="icon"><i class="icon-briefcase"></i></div>
+            <ul class="one" id="menu">
+                <li><a href="clustertest.html">查看报修信息</a></li>
+                <li><a href="#">导出报修信息</a></li>
+                <li><a href="#">图表分析</a></li>
+                <li><a href="#">修理工管理</a></li>
+            </ul>
+        </li>
+        <!-- Start Services -->
+        <li>
+            <div id="cover1"><a href="TSP.html">路径导航<i class="icon-chevron-down"></i></a></div>
+            <div id="icon"><i class="icon-truck"></i></div>
+            <!--  <ul class="one" id="menu">
+      <li><a href="#" id="addpoint" data-toggle="false" onclick="addtsppoint()">添加点</a></li>
+      <li><a href="#">文字添加</a></li>
+      <li><a href="#"  onclick="shortestpath()">路径规划</a></li>
+    </ul> -->
+        </li>
+        <li>
+            <div id="cover1"><a href="heatmap.html">垃圾箱管理<i class="icon-chevron-down"></i></a></div>
+            <div id="icon"><i class="icon-book"></i></div>
+            <ul class="one" id="about">
+                <li><img src="img/thumb1.png" alt="image">
+                    <h3><i class="icon-user"></i>模型简介及参数说明</h3>
+                    <p>
+                        道路理论垃圾桶数量 =
+                        <br>（人均垃圾量*一天总的道路人流量）/（容量*清理次数）
+                        <br>
+                        <br> 若理论数量>实际数量,增加垃圾桶数量或增加清理次数
+                        <br>若理论数量>实际数量,减少垃圾桶数量或保持现状
+                        <br>
+                        <br> 您可以通过重新设定清理次数或垃圾桶个数来计算上述比值得出优化配置结果（增加几个，在哪个位置合适，垃圾桶数量过多会影响美观性,这时您可以考虑增加清理次数来代替增加数量）
+                    </p>
+                    <h6><i class="icon-quote-left"></i>垃圾也有用，请别乱扔它。<i class="icon-quote-right"></i></h6>
+                </li>
+            </ul>
+        </li>
+        <!-- Start Contact -->
+        <li>
+            <div id="cover1"><a href="joins-inside.html">失物招领<i class="icon-chevron-down"></i></a></div>
+            <div id="icon"><i class="icon-envelope"></i></div>
+            <ul class="one" id="contact">
+                <li id="part-right">
+                    <p>地点<em>*</em></p>
+                    <input name="name" type="text" id="name">
+                    <p>联系方式<em>*</em></p>
+                    <input name="email" type="text" id="email">
+                    <p>描述<em>*</em></p>
+                    <textarea name="comment" cols="" rows="" id="comment"></textarea>
+                    <input name="send" type="button" id="send" value="提交">
+                    <input name="send" type="button" id="send" value="查看全部">
+                    <input name="send" type="button" id="send" value="区域查询">
+                </li>
+            </ul>
+        </li>
+        <!-- Start Search -->
+        <li id="search">
+            <input name="search" type="text" placeholder="Search" id="txt_search2">
+            <a href="#"><i class="icon-search"></i></a>
+        </li>
+    </ul>
+    <div id="totalmap" style="width:100%;height:100%">
+        <div id="map" class="map" style="float:left;width:50%;height:100%"></div>
+        <div id="map1" class="map1" style="float:left; width:50%;height:100%"></div>
+    </div>
+    <div>定量分析图表</div>
+    <!-- <div id="map1" class="map1"></div>
+-->
+    <!-- <form>
+<label>radius size</label>
+<input id="radius" type="range" min="1" max="50" step="1" value="5"/>
+<label>blur size</label>
+<input id="blur" type="range" min="1" max="50" step="1" value="15"/>
+</form> -->
+    <script>
+    // var blur = document.getElementById('blur');
+    // var radius = document.getElementById('radius');
+
+    var vector = new ol.layer.Heatmap({
+        source: new ol.source.Vector({
+            url: 'assets/data/pointclusterkml.kml',
+            format: new ol.format.KML({
+                extractStyles: false
+            })
+        }),
+        // blur: parseInt(blur.value, 10),
+        // radius: parseInt(radius.value, 10)
+    });
+    console.log(vector);
+    vector.getSource().on('addfeature', function(event) {
+        var name = event.feature.get('name');
+        var magnitude = parseFloat(name.substr(2));
+        event.feature.set('weight', magnitude - 5);
+    });
+    var openStreetMapLayer = new ol.layer.Tile({
+        source:new ol.source.OSM()
+    });
+    var map = new ol.Map({
+        layers: [openStreetMapLayer, vector],
+        target: 'map',
+        view: new ol.View({
+            center: ol.proj.transform(
+                [114.3983815703, 30.5256872217],
+                'EPSG:4326',
+                'EPSG:3857'
+            ),
+            zoom: 15
+        })
+    });
+    // blur.addEventListener('input', function() {
+    //   vector.setBlur(parseInt(blur.value, 10));
+    // });
+
+    // radius.addEventListener('input', function() {
+    //   vector.setRadius(parseInt(radius.value, 10));
+    // });
+    //缓冲区分析部分
+    var geojsonObject = {
+        "type": "FeatureCollection",
+        "features": [{
+            "type": "Feature",
+            "properties": {},
+            "geometry": {
+                "type": "Point",
+                "coordinates": [114.39778640000009, 30.522237200000063]
+            }
+        }]
+    };
+    var vectorSourcePolygons = new ol.source.Vector({
+        features: (new ol.format.GeoJSON()).readFeatures(geojsonObject)
+    });
+
+
+
+    // var vectorSourcePolygons = new ol.source.GeoJSON();
+
+    var pointsStyle = [new ol.style.Style({
+        image: new ol.style.Circle({
+            fill: new ol.style.Fill({
+                color: 'black'
+            }),
+            radius: 3
+        })
+    })];
+
+    var vectorLayerPolygons = new ol.layer.Vector({
+        source: vectorSourcePolygons
+    });
+
+    // Instanciate a map and add layers
+    var map1 = new ol.Map({
+
+        target: 'map1',
+        layers: [
+            openStreetMapLayer,
+            vectorLayerPolygons,
+        ],
+        view: map.getView()
+    });
+
+    fetchJSON('assets/data/pointtest2.geojson')
+        .then(function(polys_fc) {
+            console.log(polys_fc);
+
+            vectorSourcePolygons.addFeatures(geojsonToFeatures(polys_fc, {
+                featureProjection: 'EPSG:3857'
+            }));
+
+            var buffer = turf.buffer(polys_fc, 0.03, 'kilometers');
+            console.log(buffer);
+
+            vectorSourcePolygons.addFeatures(geojsonToFeatures(buffer, {
+                featureProjection: 'EPSG:3857'
+            }));
+
+        });
+    </script>
+</body>
+
+</html>
