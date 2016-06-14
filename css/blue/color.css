@@ -1,0 +1,54 @@
+/*** Background & Color ***********/
+
+body{
+	/*background-image:url(../../img/back.png);*/
+	background-repeat:repeat;	
+}
+.nav a, .nav i, .nav p, .one i.icon-chevron-right{
+	color:#ffffff;
+}
+.nav h3, .nav h4, .nav h3 i, .nav h4 i{
+	color:#333333;
+}
+.nav em{
+	color:#FF0000;
+}
+.nav h6,
+.nav img{
+	background-color:rgba(255,255,255,.3);
+}
+
+.nav{ /*BACK COLOR*/
+	background: #ffffff; 
+	background: -moz-linear-gradient(top,  #ffffff 0%, #e5e5e5 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#e5e5e5));
+	background: -webkit-linear-gradient(top,  #ffffff 0%,#e5e5e5 100%); 
+	background: -o-linear-gradient(top,  #ffffff 0%,#e5e5e5 100%); 
+	background: -ms-linear-gradient(top,  #ffffff 0%,#e5e5e5 100%); 
+	background: linear-gradient(to bottom,  #ffffff 0%,#e5e5e5 100%); 
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e5e5e5',GradientType=0 ); 
+}
+.one li,
+#cover1{                                   /*PRIMARY COLOR - (For each menu must change)*/
+	background-color:#4D85EA;
+}
+#social i,
+#icon i,
+#search i{                                 /*PRIMARY COLOR - (For each menu must change)*/
+	color:#4D85EA;
+}
+.one li:hover > a{
+	background-color:rgba(51,51,51,.8);	
+}
+#icon{
+	background-color: #ffffff;	
+}
+
+#social a:hover i,
+#search a:hover i{
+	color:#666666;
+}
+#search input {
+	background-color:rgba(51,51,51,.1);
+	border-color:#4D85EA;                   /*PRIMARY COLOR - (For each menu must change)*/
+}

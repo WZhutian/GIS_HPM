@@ -1,0 +1,262 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+  <title>OSM Buildings Example</title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <link href="CSS/leaflet.css" rel="stylesheet" />
+  <script src="JS/OSMBuildings-Leaflet.js"></script>
+  <script src="JS/jquery-1.10.2.min.js"></script>
+  <script src="JS/leaflet.js"></script>
+  <script src="JS/map_styles.js"></script>
+  <link href="CSS/styles.css" rel="stylesheet" />
+
+<link rel="stylesheet" type="text/css" href="../css/">
+<link rel="stylesheet" type="text/css" href="../font/titillium/stylesheet.css">
+<link rel="stylesheet" type="text/css" href="../font/exo-demibold/stylesheet.css">
+<link rel="stylesheet" type="text/css" href="../css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="../css/reset.css">
+<link rel="stylesheet" type="text/css" href="../css/animation.css">
+<link rel="stylesheet" type="text/css" href="../css/blue/responsive.css">
+<link rel="stylesheet" type="text/css" href="../css/blue/color.css">
+
+<link rel="stylesheet" type="text/css" href="../css/live-preview.css">
+<link rel="stylesheet" type="text/css" href="../live-font/stylesheet.css">
+
+<script type="text/javascript" src="../js/modernizr.custom.29473.js"></script>
+<script type="text/javascript" src="../js/dropdown.js"></script>
+
+
+  <style type="text/css">
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    #map {
+      width: 100%;
+      height: 100%;
+    }
+
+    .control {
+      position: absolute;
+      left: 0;
+      z-index: 1000;
+    }
+
+    .control.tilt {
+      top: 0;
+    }
+
+    .control.rotation {
+      top: 45px;
+    }
+
+    .control.zoom {
+      top: 90px;
+    }
+
+    .control.zoom button{
+      font-weight: normal;
+    }
+
+    .control button {
+      width: 30px;
+      height: 30px;
+      margin: 15px 0 0 15px;
+      border: 1px solid #999999;
+      background: #ffffff;
+      opacity: 0.6;
+      border-radius: 5px;
+      box-shadow: 0 0 5px #666666;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .control button:hover {
+      opacity: 1;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+<ul class="nav" style="position:fixed;">
+  
+  <!-- Start Home -->
+  <li id="first">
+    <div id="cover1"><a href="#">三维校园<i class="icon-chevron-down"></i></a></div>
+    <div id="icon"><i class="icon-home" ></i></div>
+     <ul class="one" id="home">
+      <li>
+          <h3><i class="icon-user"></i>Welcome</h3>
+            <p id="p-first">中国地质大学（武汉）位于武汉东湖国家自主创新示范区腹地。学校拥有国家4A级旅游景区——逸夫博物馆，是全国文明单位、湖北省最佳文明单位。校园环境优美，教育、科研、学术氛围浓厚，拥有现代化的教学楼群、图书馆、学生公寓和近万台随时上网的计算机等相关配套设施，为莘莘学子提供了良好的学习、生活和成长的环境。</p>
+            <!-- <img src="img/didalogo.png"> -->
+            <a href="http://www.cug.edu.cn/new/">中国地质大学</a>
+        </li>
+     </ul>
+  </li>
+  
+  <!-- Start Portfolio -->
+  <li>
+    <div id="cover1"><a href="../clustertest.html">报修管理<i class="icon-chevron-down"></i></a></div>
+    <div id="icon"><i class="icon-briefcase" ></i></div>
+    <ul class="one" id="menu">
+      <li><a href="../clustertest.html" >查看报修信息</a></li>
+      <li><a href="#">导出报修信息</a></li>
+      <li><a href="#">图表分析</a></li>
+      <li><a href="#">修理工管理</a></li>
+    
+    </ul>
+  </li>
+  
+  <!-- Start Services -->
+  <li>
+    <div id="cover1"><a href="../TSP.html">路径导航<i class="icon-chevron-down"></i></a></div>
+    <div id="icon"><i class="icon-truck" ></i></div>
+   <!--  <ul class="one" id="menu">
+      <li><a href="#" id="addpoint" data-toggle="false" onclick="addtsppoint()">添加点</a></li>
+      <li><a href="#">文字添加</a></li>
+      <li><a href="#"  onclick="shortestpath()">路径规划</a></li>
+    </ul> -->
+  </li>
+ 
+  <li>
+    <div id="cover1"><a href="../heatmap.html">垃圾箱管理<i class="icon-chevron-down"></i></a></div>
+    <div id="icon"><i class="icon-book" ></i></div>
+    <ul class="one" id="about">
+      <li><img src="img/thumb1.png" alt="image">
+        <h3><i class="icon-user"></i>模型简介及参数说明</h3>
+        <p>
+        道路理论垃圾桶数量 =<br>（人均垃圾量*一天总的道路人流量）/（容量*清理次数）<br><br>
+若理论数量>实际数量,增加垃圾桶数量或增加清理次数<br>若理论数量>实际数量,减少垃圾桶数量或保持现状<br><br>
+您可以通过重新设定清理次数或垃圾桶个数来计算上述比值得出优化配置结果（增加几个，在哪个位置合适，垃圾桶数量过多会影响美观性,这时您可以考虑增加清理次数来代替增加数量）
+        </p>
+        <h6><i class="icon-quote-left"></i>垃圾也有用，请别乱扔它。<i class="icon-quote-right"></i></h6>
+      </li>
+    </ul>
+  </li>
+  
+  <!-- Start Contact -->
+  <li>
+    <div id="cover1"><a href="../joins-inside.html">失物招领<i class="icon-chevron-down"></i></a></div>
+    <div id="icon"><i class="icon-envelope" ></i></div>
+    <ul class="one" id="contact">
+      <li id="part-right">
+        <p>地点<em>*</em></p>
+        <input name="name" type="text" id="name">
+        <p>联系方式<em>*</em></p>
+        <input name="email" type="text" id="email">
+        <p>描述<em>*</em></p>
+        <textarea name="comment" cols="" rows="" id="comment"></textarea>
+        <input name="send" type="button" id="send" value="提交">
+        <input name="send" type="button" id="send" value="查看全部">
+        <input name="send" type="button" id="send" value="区域查询">
+      </li>
+    </ul>
+  </li>
+  
+  <!-- Start Search -->
+  <li id="search">
+    <input name="search" type="text" placeholder="Search" id="txt_search2">
+    <a href="#"><i class="icon-search"></i></a> 
+  </li>
+  
+</ul>
+  <div id="map_main"></div>
+  <!-- <div class="control tilt">
+    <button class="dec">&#8601;</button>
+    <button class="inc">&#8599;</button>
+  </div>
+
+  <div class="control rotation">
+    <button class="inc">&#8630;</button>
+    <button class="dec">&#8631;</button>
+  </div>
+
+  <div class="control zoom">
+    <button class="dec">-</button>
+    <button class="inc">+</button>
+  </div> -->
+  <div id="building_buttons">
+    Hour of day (1-23) (for shadow):
+    <input id="inp_hour_of_day" size="3" type="number" value="15" min="1" max="23">
+    <br />
+  </div>
+
+  <script type="text/javascript">
+
+            var map = new L.Map('map_main').setView([114.3983815703, 30.5256872217], 15);
+            // var map = new L.Map('map_main').setView([41.88777, -87.62735], 15);
+            var tileURL = "http://otile1.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.jpg";
+            var attributionText = 'Tiles Courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png">';
+            attributionText = attributionText + ' data © <a href="http://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors';
+            var tileLayer = new L.TileLayer(tileURL,{ attribution: attributionText });
+
+            map.addLayer(tileLayer);
+
+            function getCenter(geoJson) {
+                  var geometry, len = 0, lat = 0, lon = 0;
+                  for (var i = 0, il = geoJson.features.length; i < il; i++) {
+                    geometry = geoJson.features[i].geometry.coordinates[0];
+                    if (geometry[0][0][0]) {
+                      geometry = geometry[0];
+                    }
+
+                    len += geometry.length-1;
+                    for (var j = 0, jl = geometry.length-1; j < jl; j++) {
+                      lat += geometry[j][1];
+                      lon += geometry[j][0];
+                    }
+                  }
+
+                  return { lat:lat/len, lon:lon/len };
+                }
+                var OSMBLayer=new OSMBuildings(map);
+            $('#inp_hour_of_day').change(inp_hour_of_day_change);
+            add_osmb_click();
+
+            function add_osmb_click()   {
+                console.log("add_osmb_onclick fired");
+                $.getJSON("data/basemap_geojson.geojson", function(result) {
+                 try {
+                    geoJson=result;
+                  } catch(e) {}
+                  OSMBLayer.setData(geoJson);
+                  var center = getCenter(geoJson);
+                  map.setView([center.lat, center.lon], 15);
+                  console.log(OSMBLayer.map);
+            });
+            }
+            function inp_hour_of_day_change() {
+                var hourOfDay = $('#inp_hour_of_day').val();
+                OSMBLayer.setDate(new Date(2013, 07, 13, hourOfDay));
+            }
+            var controlButtons = document.querySelectorAll('.control button');
+            for (var i = 0, il = controlButtons.length; i < il; i++) {
+              controlButtons[i].addEventListener('click', function(e) {
+                var button = this;
+                var parentClassList = button.parentNode.classList;
+                var direction = button.classList.contains('inc') ? 1 : -1;
+                var increment;
+                var property;
+
+                if (parentClassList.contains('tilt')) {
+                  property = 'Tilt';
+                  increment = direction*10;
+                }
+                if (parentClassList.contains('rotation')) {
+                  property = 'Rotation';
+                  increment = direction*10;
+                }
+                if (parentClassList.contains('zoom')) {
+                  property = 'Zoom';
+                  increment = direction*1;
+                }
+                if (property) {
+                  map['set'+ property](map['get'+ property]()+increment);
+                }
+              });
+  }
+        </script></body>

@@ -1,0 +1,29 @@
+@charset "utf-8";
+.live{
+	position:relative;
+	width:80%;
+	height:150px;
+	padding:30px 10px 20px 30px;
+}
+.live h3, .live h4, .live h5{
+	font-family:'exodemi_bold', Geneva, sans-serif;
+}
+.live h3{
+	font-size:32px;
+	text-transform:uppercase;
+	color:#4D85EA;
+}
+.live h4{
+	font-size:22px;
+	color:#CCCCCC;
+}
+.live h5{
+	font-size:16px;
+	color:#ffffff;
+	line-height:26px;
+}
+@media screen and (min-width:0px) and (max-width:800px) {
+	.live h3, .live h4, .live h5{
+		display:none;
+}
+}
