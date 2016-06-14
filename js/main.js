@@ -13,34 +13,37 @@ jQuery(document).ready(function($) {
 */
     WZT.getData = function() {
         //从url中获取楼ID
-        function GetQueryString() {
+        (function() {
             var r = window.location.search.substr(1); //获取url中"?"符后的字符串
             var context = r.split('&');
             WZT.Data.BuildingID = context[0].split('=')[1];
-        }
-        GetQueryString();
-        //从后台获取数据，
-        function getBuildingInfo(data) {
-            var url = './php/getBuildingInfo.php';
-            jQuery.ajax({
-                url: url,
-                data: data,
-                type: 'POST',
-                // dataType: 'json',
-                complete: function(xhr, textStatus) {
-                    //called when complete
-                },
-                success: function(data, textStatus, xhr) {
-                    //called when successful
-                    var data1 = eval('data');
-                    console.log(data1);
-                },
-                error: function(xhr, textStatus, errorThrown) {
-                    //called when there is an error
-                }
-            });
-        }
-        // getBuildingInfo(WZT.Data.BuildingID);
+            console.log("ULR中的楼ID:", WZT.Data.BuildingID);
+            //从后台获取数据，
+            var data = { "B_ID": WZT.Data.BuildingID };
+            (function (data) {
+                var url = './php/getBuildingInfo.php';
+                jQuery.ajax({
+                    url: url,
+                    data: data,
+                    type: 'POST',
+                    // dataType: 'json',
+                    complete: function(xhr, textStatus) {
+                        //called when complete
+                    },
+                    success: function(data, textStatus, xhr) {
+                        //called when successful
+                        var data1 = eval('data');
+                        console.log("getbuildinginfo获取的json：",data1);
+                        $.each(data1['room'],function(name,value){
+
+                        });
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        //called when there is an error
+                    }
+                });
+            })(data);
+        })();
     }
     WZT.getData();
 
@@ -127,7 +130,6 @@ jQuery(document).ready(function($) {
             }
         });
     }
-    console.log(2)
     $('.cd-start').on('click', WZT.buildingChooseAni); //绑定点击事件
     //返回楼层选择
     $('.cd-close-product-tour').on('click', function() {
@@ -151,7 +153,7 @@ jQuery(document).ready(function($) {
             $('.cd-start').bind('click', WZT.buildingChooseAni);
         }, 800)
         $(".room-legend").each(function() {
-            $(this).css({ 'top': parseFloat($(this).css('top')) * WZT.topChange + 'px', 'left': parseFloat($(this).css('left')) * WZT.widthChange + 'px', 'height': 50 * WZT.topChange + 'px', 'width': 50 * WZT.widthChange + 'px' });
+            $(this).animate({ 'top': parseFloat($(this).css('top')) * WZT.topChange + 'px', 'left': parseFloat($(this).css('left')) * WZT.widthChange + 'px', 'height': 50 * WZT.topChange + 'px', 'width': 50 * WZT.widthChange + 'px' });
         });
     });
     //其他楼层动画
@@ -230,8 +232,6 @@ jQuery(document).ready(function($) {
             }
             WZT.Area.lastDrag = this;
             WZT.Area.status = 1;
-            // console.log(this)
-            // console.log("dragStart")
             WZT.Area.getArea();
         })
         $(domName).on('dragMove', function(event, pointer, moveVector) {
@@ -252,7 +252,6 @@ jQuery(document).ready(function($) {
             // console.log(X, Y);
         })
         $(domName).on('dragEnd', function(event, pointer) {
-            // console.log("dragEnd")
             // var draggie = $(this).data('draggabilly');
             // console.log('eventName happened', draggie.position.x, draggie.position.y);
             if (WZT.Area.status == 1) {
