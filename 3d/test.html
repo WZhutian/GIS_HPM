@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+
+<html lang="zh-cn">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+	<meta charset="gb2312">
+	<style> 
+.animated_div
+{
+width:60px;
+height:40px;
+color:#ffffff;
+position:relative;
+font-weight:bold;
+padding:20px 10px 0px 10px;
+float:left;
+margin:20px;
+margin-right:50px;
+border:1px solid #888888;
+-webkit-border-radius:5px;
+-moz-border-radius:5px;
+border-radius:5px;
+font:12px Verdana, Arial, Helvetica, sans-serif;
+text-align:center;
+vertical-align:middle;
+}
+
+#div1 {background:#92B901;transform:rotate(30deg);-webkit-transform:rotate(30deg);-o-transform:rotate(30deg);-moz-transform:rotate(30deg);}
+#div2 {background:#f98450;transform:scale(2,2);-webkit-transform:scale(2,2);-o-transform:scale(2,2);-moz-transform:scale(2,2);}
+#div3 {background:#1ec7e6;transform:skew(30deg,20deg);-webkit-transform:skew(30deg,20deg);-o-transform:skew(30deg,20deg);-moz-transform:skew(30deg,20deg);}
+
+#div1 {-ms-filter: "progid:DXImageTransform.Microsoft.Matrix(M11=0.8660254037844384, M12=-0.5000000000000004, M21=0.5000000000000004, M22=0.8660254037844384, SizingMethod=auto expand)";}
+#div2 {-ms-filter: "progid:DXImageTransform.Microsoft.Matrix(M11=2, M12=0, M21=0, M22=2, SizingMethod=auto expand)";}
+#div3 {-ms-filter: "progid:DXImageTransform.Microsoft.Matrix(M11=1, M12=0.5773502691896265, M21=0.3639702342662022, M22=1, SizingMethod=auto expand)";}
+
+#rotate1,#rotatey1
+{
+border:1px solid #000000;
+background:red;
+margin:10px;
+opacity:0.7;
+}
+</style>
+
+	<script>
+<!--
+var x,y,n=0,ny=0,rotINT,rotYINT
+function rotateDIV()
+{
+x=document.getElementById("rotate1")
+clearInterval(rotINT)
+rotINT=setInterval("startRotate()",10)
+}
+function rotateYDIV()
+{
+y=document.getElementById("rotatey1")
+clearInterval(rotYINT)
+rotYINT=setInterval("startYRotate()",10)
+}
+function startRotate()
+{
+n=n+1
+x.style.transform="rotate(" + n + "deg)"
+x.style.webkitTransform="rotate(" + n + "deg)"
+x.style.OTransform="rotate(" + n + "deg)"
+x.style.MozTransform="rotate(" + n + "deg)"
+if (n==180 || n==360)
+{
+clearInterval(rotINT)
+if (n==360){n=0}
+}
+}
+function startYRotate()
+{
+ny=ny+1
+y.style.transform="rotateY(" + ny + "deg)"
+y.style.webkitTransform="rotateY(" + ny + "deg)"
+y.style.OTransform="rotateY(" + ny + "deg)"
+y.style.MozTransform="rotateY(" + ny + "deg)"
+if (ny==180 || ny>=360)
+{
+clearInterval(rotYINT)
+if (ny>=360){ny=0}
+}
+}
+//-->
+</script>
+
+	<title>CSS3 3D 转换</title>
+
+</head>
+
+<body class="html" id="tags">
+
+	<div onclick="rotateDIV()" id="rotate1" class="animated_div" style="-webkit-transform: rotate(180deg);">2D 旋转</div>
+	<div onclick="rotateYDIV()" id="rotatey1" class="animated_div" style="-webkit-transform: rotateY(180deg);">3D 翻转</div>
+</body>
+</html>

@@ -165,8 +165,10 @@
     {
         "building":{
             "B_Name":
-            "BaseMap":
-            "Floor":
+            "BaseMap":{
+    
+            }
+            "Floors":
             "Attribute":{
                 自定义数据
             }
@@ -185,7 +187,7 @@
                 Type:{
                     不同房间类型包含的内容见石墨文档    
                 }
-                 "facility"{
+                 "facility":{
                     F_ID:{
                         "F_Num":
                         "F_Name":
@@ -252,14 +254,12 @@
     添加房间信息
     参数
     {
-        "B_ID":
         "Floor":
         "L_ID":
         "X":
         "Y":
         "R_Name":
         "R_Area":
-        "R_Type":
         Type:{
             不同房间类型包含的内容见石墨文档    
         }

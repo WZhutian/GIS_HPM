@@ -1,0 +1,363 @@
+@charset "utf-8";
+
+/*** Start General ********************/
+.nav li {
+	list-style: none;
+}
+.nav a{
+	display:block;
+	text-decoration:none;
+}
+.nav i {
+	display:block;
+}
+.nav p, .nav a, .nav h3, .nav h4{
+	font-family:'exodemi_bold', Geneva, sans-serif;
+}
+.nav p, .nav h3, .nav h4, .one li a {
+	font-family:'titilliumregular', Palatino, Georgia, serif;
+}
+.nav a, .nav h3, .nav h4{
+	text-transform:uppercase;
+}
+.nav h3{
+	font-size:20px;
+}
+.nav h4{
+	font-size:18px;
+}
+.nav img{
+	padding:10px;
+	box-shadow: 1px 1px 4px rgba(102,102,102,.4);
+}
+/* For Phone & Tablet */
+.nav i.icon-chevron-down {
+	display: none;
+	visibility: hidden;
+}
+/*** End General ********************/
+
+/*** Start .nav Class ***************/
+.nav {
+	display: block;
+	position: relative;
+	width:1100px;
+	height:60px;
+	padding: 10px 30px;
+	margin: 20px auto;
+	
+	border-radius:3px;
+}
+.nav li {
+	position: relative;
+	display: block;
+	height: 60px;
+	width:130px;
+	float: left;
+	margin-right:1px;
+}
+.nav li a{
+	height: 40px;
+	width: 100%;
+	float: left;
+	padding: 20px 0px 0px 0px;
+	overflow: hidden;
+	
+	text-align: center;
+	font-weight: normal;
+	font-size: 15px;
+	letter-spacing: 0.1em;
+}
+/*** End .nav Class ***************/
+
+/*** Start .one Class *************/
+.nav .one {
+	display: block;
+	position:absolute;
+	
+	top: 100%;
+	left: 0;
+	padding-top:10px;
+	padding-bottom:10px;
+}
+.one > li{
+	width:180px;
+	height:40px;
+	float: none;
+	border-bottom:1px solid #A8A8A8;
+}
+.nav .one > li a{
+	width:150px;
+	height:20px;
+	float:none;
+	padding:10px 0 10px 30px;
+	
+	text-align:left;
+	text-transform:capitalize;
+	font-size:13px;	
+}
+.one h3{
+	padding:3px 5px 10px 8px;
+}
+.one li i.icon-chevron-right{
+	float:right;
+	margin:5px 17px 0 0;
+}
+/*** End .one Class *****************/
+
+/*** Start .one #sub-menu ***********/
+.nav .one #sub-menu{
+	left: 100%;
+	top: 0%;
+}
+/*** End .one #sub-menu *************/
+
+/*** Start #cover1 & #icon **********/
+#cover1,
+#icon{
+	position:absolute;
+	top:0;
+	left:0;
+	
+	transform-origin:50% 50%;
+	-ms-transform-origin:50% 50%;
+	
+	transition:all .3s;
+	-ms-transition:all .3s;
+}
+#cover1{
+	width:100%;
+	height:100%;
+	z-index:50;
+}
+#icon{
+	height:35px;
+	width:130px;
+	z-index:1;
+	border-radius:3px 3px 0 0;
+}
+#icon i{
+	font-size:28px;
+	padding:3px 47px;
+}
+/*** End #cover1 & #icon ***********/
+
+/*** Start Home *******************/
+#home {
+	left:0px;
+	overflow:hidden;
+}
+#home li {
+	width: 300px;
+	height: 320px;
+	padding: 10px;
+}
+#home li img{
+	float:left;
+	margin:5px 12px 10px 5px;
+}
+#home li p{
+	padding: 5px 8px 8px 8px;
+	
+	font-size:14px;
+	text-align:justify;
+}
+#home li p#p-first{
+	border-bottom:1px solid #A8A8A8;
+	margin-bottom:10px;
+}
+/*** End Home *******************/
+
+/*** Start links ***************/
+#links {
+	left:-270px;
+	overflow:hidden;	
+}
+#links > li {
+	width: 650px;
+	height: 215px;
+	padding: 2px 0px 16px 10px;
+}
+#links li i {
+	font-size: 12px;
+}
+#links .link-block{
+	width: 28%;
+	float: left;
+	padding: 0 5px 30px 5px;
+	margin: 10px 0 7px 15px;
+}
+#links .link-block h4 {
+	margin:5px 0 10px 4px;
+	padding:1px 0 8px 7px;
+	border-bottom: 1px solid #A8A8A8;
+}
+#links .link-block h4 i {
+	margin-right:10px;
+	font-size: 20px;
+}
+#links .link-block li{
+	height:22px;
+}
+#links .link-block li a {
+	height:20px;
+	padding: 0 0 0 6px;
+	
+	font-size: 12px;
+	text-transform:capitalize;
+	border:none;
+
+	transition: padding-left .3s;
+	-ms-transition: padding-left .3s;
+}
+#links .link-block li:hover a {
+	padding-left: 14px;
+}
+/*** End links *******************/
+
+/*** Start About *******************/
+#about {
+	left:-220px;
+	overflow:hidden;
+}
+#about li {
+	width: 550px;
+	height: 320px;
+	padding: 10px;
+}
+#about li i{
+	padding:0 7px;
+}
+#about li p{
+	padding: 5px;
+	
+	line-height: 23px;
+	font-size: 14px;
+	text-align:justify;
+}
+#about img {
+	width:120px;
+	height:140px;
+	float: right;
+	margin: 30px 5px 5px 20px;
+}
+#about h6{
+	margin:15px 20px 10px 20px;
+	padding:10px;
+	
+	font-family: Cambria, Palatino, "Palatino Linotype", "Palatino LT STD", Georgia, serif;
+	font-size:13px;
+	font-style:italic;
+	line-height: 20px;
+}
+#about h6 i{
+	font-size:11px;
+}
+/*** End About ********************/
+
+/*** Start Contact ****************/
+#contact {
+	left:-90px;
+	width: 300px;
+}
+#contact li {
+	width:270px;
+	height: 270px;
+	padding: 10px;
+	float:right;
+	overflow:hidden;
+}
+#contact li input{
+	height:27px;
+}
+#contact li textarea{
+	height:80px;
+}
+#contact li input,
+#contact li textarea{
+	width:85%;
+	margin-left:20px;
+	border:none;
+	border-radius:2px;
+}
+#contact li p{
+	font-size:13px;
+	padding:3px 0;
+	line-height: 23px;
+}
+#contact li input#send{
+	width:70px;
+	height:27px;
+	margin-top:10px;
+	margin-left:20px;
+}
+/*** End Contact *******************/
+
+/* Start #Search  ****************/
+#search {
+	float: right;
+	display: block;
+	width:270px;
+	
+	transition: all .3s;
+	-ms-transition: all .3s;
+}
+#search a{
+	width:30px;
+	margin:13px 0 0 3px;
+	padding:0;
+}
+#search a i {
+	padding-top:0px;
+	float:right;
+	font-size:27px;
+}
+#search input {
+	width:175px;
+	padding: 8px;
+	margin: 9px 5px 0px 25px;
+	float:left;
+	
+	border:5px solid;
+	border-radius: 2px;
+	
+	box-shadow: 1px 1px 2px #fff, 1px 1px 2px rgba(158,111,86,0.3) inset;	
+}
+/* End #Search **********************/
+
+/* Start #social ********************/
+#social{
+	position:absolute;
+	top:-30px;
+	left:980px;
+	width:133px;
+	height:30px;
+	padding:0 7px;	
+	border-radius:3px 3px 0 0;
+}
+#social a{
+	width:33px;
+	height:28px;
+	float:left;
+	padding:6px 0;
+}
+#social a i{
+	font-size:28px;
+}
+/* End #social ********************/
+
+/*** Special Background & Color ***********/
+.nav li:hover #cover1 a,
+.one li:hover > a{
+	background-color:#595959;	
+}
+#search input{
+	border:5px solid #4D85EA;
+}
+#social{
+	background-color: #ffffff;
+}
+.nav img,
+.nav h6{
+	background-color:#DCDCDC
+}
