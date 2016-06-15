@@ -1,7 +1,10 @@
 jQuery(document).ready(function($) {
     //初始化变量区域————————————————————————————————
     var WZT = {};
+    //用户选择的部分
     WZT.edit_Floor = 0;
+    WZT.edit_Room = 0;
+    WZT.edit_Legend = 0;
     WZT.Data = {}; //用来保存后台回去的所有数据
     WZT.AllRecored = {}; //用来暂存临时变量
     WZT.Data.Floors = 0; //总楼层数
@@ -310,13 +313,15 @@ jQuery(document).ready(function($) {
 
         //后台添加，返回ID， TODO
         var data = {
+            "B_ID": WZT.Data.B_ID,
             "Floor": WZT.edit_Floor,
             "L_ID": WZT.edit_Legend,
-            "X": x1,
-            "Y": y1,
+            "X": (x1 - X1),
+            "Y": (y1 - Y1),
             "R_Name": '',
-            "R_Area": '',
+            "R_Area": ''
         }
+        console.log(data)
 
         function addRoom(data, edit_Floor, dom) {
             var url = './php/addRoom.php';
@@ -330,6 +335,7 @@ jQuery(document).ready(function($) {
                 },
                 success: function(data, textStatus, xhr) {
                     //called when successful
+                    console.log(data)
                     dom[0].setAttribute('data-r_id', data['R_ID']);
                 },
                 error: function(xhr, textStatus, errorThrown) {
@@ -338,7 +344,8 @@ jQuery(document).ready(function($) {
             });
         }
         var dom = $("#cd-floor-" + WZT.edit_Floor + " ul li:last-child");
-        dom[0].setAttribute('data-r_id', 1);
+        dom[0].setAttribute('data-r_id', 0);
+        addRoom(data, WZT.edit_Floor, dom);
     }
 
     function addNewLegendFromDB(X, Y, Floor, B_ID) {
@@ -346,11 +353,8 @@ jQuery(document).ready(function($) {
         var container = $("#cd-floor-" + Floor + " .cd-start");
         var x1 = parseFloat(X);
         var y1 = parseFloat(Y);
-        var domName = '<li class="room-legend" style="top:' + y1 + 'px;left:' + x1 + 'px;"></li>'
-
+        var domName = '<li class="room-legend" style="top:' + y1 + 'px;left:' + x1 + 'px;"></li>';
         $("#cd-floor-" + Floor + " ul").append(domName);
-
-        //后台添加，返回ID， TODO
         $("#cd-floor-" + Floor + " ul li:last-child")[0].setAttribute('data-r_id', B_ID);
     }
 
