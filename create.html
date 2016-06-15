@@ -48,6 +48,10 @@
     </section>
     <section id="legend-pannel">
         <div id="switch_btn">图例板</div>
+        <div id="copy-Legend">
+            <input type="number" name="From">
+            <input type="number" name="To">
+        </div>
         <div id="Legend">
             <ul>
                 <li>
@@ -62,15 +66,23 @@
                     <div class="box-legend">C</div>
                     <div class="text-legend">电梯节点</div>
                 </li>
+                <li>
+                    <div class="box-legend">C</div>
+                    <div class="text-legend">入口节点</div>
+                </li>
             </ul>
         </div>
-        <div>连接节点</div>
     </section>
     <section id="roomInfo-pannel">
         <h1>这是第X层</h1>
     </section>
     <section id="location-pannel">
     </section>
+    <div id="dialog-modal">
+        从
+        <input id="stair-from" type="number" name="From">楼到
+        <input id="stair-to" type="number" name="To">楼
+    </div>
     <!-- 室内地图自动大小功能 -->
     <!--     <div id="autoMap" style="position:absolute;">
         <img src="img/cd-app-image.png">
@@ -78,30 +90,6 @@
     <script src="js/jquery-2.1.1.min.js"></script>
     <script src="js/AddNode.js"></script>
     <script src="js/draggabilly.pkgd.min.js"></script>
-    <script>
-    function addLine(A_X, A_Y, B_X, B_Y, dom) {
-        var add = 0;
-        if (A_Y > B_Y) {
-            [A_X, B_X] = [B_X, A_X];
-            [A_Y, B_Y] = [B_Y, A_Y];
-        }
-        var D_X = Math.abs(A_X - B_X);
-        var D_Y = Math.abs(A_Y - B_Y);
-        var midpoint = {}
-        midpoint.left = (B_X + A_X) / 2;
-        midpoint.top = A_Y;
-        var rotate = Math.atan(D_X / D_Y) * 180 / Math.PI;
-        console.log(rotate);
-        var length = Math.sqrt(D_X * D_X + D_Y * D_Y)
-        var domName = '<div class="Floor_line" style="top:' + midpoint.top + 'px;left:' + midpoint.left + 'px;height:' + length + 'px;transform:rotate(-' + (rotate + add) + 'deg);"></div>'
-        $(dom).append(domName);
-    }
-    addLine(20, 20, 10, 10, '.cd-start')
-    function addPoint(x,y,f){
-
-
-    }
-    </script>
 </body>
 
 </html>
