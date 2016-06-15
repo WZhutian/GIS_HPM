@@ -318,7 +318,9 @@
          },
          success: function(data, textStatus, xhr) {
              //called when successful
-             console.log(data);
+             // console.log(data);
+              var data1 = eval('data');
+             console.log(data1);
          },
          error: function(xhr, textStatus, errorThrown) {
              //called when there is an error
@@ -424,6 +426,28 @@
  */
  function deFacility(data) {
      var url = './php/deFacility.php';
+     jQuery.ajax({
+         url: url,
+         data: data,
+         type: 'POST',
+         // dataType: 'json',
+         complete: function(xhr, textStatus) {
+             //called when complete
+         },
+         success: function(data, textStatus, xhr) {
+             //called when successful
+             console.log(data);
+         },
+         error: function(xhr, textStatus, errorThrown) {
+             //called when there is an error
+         }
+     });
+ }
+ /*
+将json数据读入文件中
+ */
+function readfile(data) {
+     var url = './php/readfile.php';
      jQuery.ajax({
          url: url,
          data: data,
