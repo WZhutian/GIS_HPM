@@ -7,9 +7,8 @@ $building_data=array();
 while ($row=mysql_fetch_array($result1)) {  
 	$building_data["B_Name"]=$row["B_Name"];
 	$building_data["Floors"]=$row["Floors"];
-	$building_data["Attribute"]=$row["Attribute"];
+	//$building_data["Attribute"]=$row["Attribute"];
 	$building_data["B_Type"]=$row["B_Type"];
-	$building_data["LocationPath"]=$row["LocationPath"];
 }
 #从Floor中获取BaseMap信息
 $basemap=array();
