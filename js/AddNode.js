@@ -26,7 +26,7 @@ jQuery(document).ready(function($) {
 
 
         for (var i = 1; i < WZT.Data.Floors; i++) {
-            var addFloorDom = "<div id='cd-floor-" + i + "' class='cd-product-mockup' style='top:" + (WZT.AllRecored.zeroTop - i * WZT.AllRecored.heightEvery) + "px;'><div class='cd-start container' style='background-image:url(./map/" + WZT.Data.B_ID + "_" + WZT.Data.BaseMap[i]['BaseMap'] + ".png)'></div><ul></ul><div class='cd-3d-right-side'></div><div class='cd-3d-bottom-side'></div></div>";
+            var addFloorDom = "<div id='cd-floor-" + i + "' class='cd-product-mockup' style='top:" + (WZT.AllRecored.zeroTop - i * WZT.AllRecored.heightEvery) + "px;'><div class='cd-start container' style='background-image:url(./map/" + WZT.Data.BaseMap[i + 1]['BaseMap'] + ".png)'></div><ul></ul><div id='loc-" + i + "'></div><div class='cd-3d-right-side'></div><div class='cd-3d-bottom-side'></div></div>";
             $('.cd-product').append(addFloorDom);
         }
         //初始化楼层平台大小
@@ -40,8 +40,8 @@ jQuery(document).ready(function($) {
             WZT.heightNew = pic_real_height / pic_real_width * 440 + "px";
             $(".cd-start").css('width', WZT.widthNew);
             $(".cd-3d-bottom-side").css('width', WZT.widthNew);
-            WZT.topChange = 800 / parseInt(WZT.heightNew);
-            WZT.widthChange = parseInt(WZT.widthNew) / (440 / 450) / 100;
+            WZT.topChange = 800 / parseFloat(WZT.heightNew);
+            WZT.widthChange = parseFloat(WZT.widthNew) / (440 / 450) / 100;
 
             //
             $(".room-legend").each(function() {
@@ -66,12 +66,14 @@ jQuery(document).ready(function($) {
     WZT.buildingChooseAni = function(event) {
         //获取点击的楼层号
         var idName = $(this).parent().attr("id");
-        WZT.edit_Floor = idName[idName.length - 1];
+        WZT.edit_Floor = parseInt(idName[idName.length - 1]);
         WZT.hideBuildingIcon(WZT.edit_Floor, WZT.Data.Floors);
         //修改事件绑定
         $('.cd-start').unbind();
         // event.preventDefault();
-        //
+        $('#stair-from').val(WZT.edit_Floor + 1)
+        $("#stair-to").val(WZT.edit_Floor + 1)
+            //
         var landuo = [151, 135, 124, 119, 120, 127, 140, 159, 184, 215];
         var domName = "#cd-floor-";
         WZT.AllRecored.BuildingSelectTop = parseInt($(this).parent().css('top'));
@@ -97,7 +99,7 @@ jQuery(document).ready(function($) {
                         });
                         //点位置变化函数
                         $(".room-legend").each(function() {
-                            $(this).animate({ 'top': parseInt($(this).css('top')) / WZT.topChange + 'px', 'left': parseInt($(this).css('left')) / WZT.widthChange + 'px', 'height': '50px', 'width': '50px' })
+                            $(this).animate({ 'top': parseFloat($(this).css('top')) / WZT.topChange + 'px', 'left': parseFloat($(this).css('left')) / WZT.widthChange + 'px', 'height': '50px', 'width': '50px' })
                         });
                     }
                 });
@@ -111,7 +113,7 @@ jQuery(document).ready(function($) {
             var r = window.location.search.substr(1); //获取url中"?"符后的字符串
             var context = r.split('&');
             WZT.Data.B_ID = context[0].split('=')[1];
-            WZT.Data.B_ID = 1;
+            WZT.Data.B_ID = 52;
             console.log("ULR中的楼ID:", WZT.Data.B_ID);
             //从后台获取数据，
             var data = { "B_ID": WZT.Data.B_ID };
@@ -132,19 +134,14 @@ jQuery(document).ready(function($) {
                         //处理building信息
                         WZT.Data.B_Name = data1['building']['B_Name'];
                         WZT.Data.Floors = data1['building']['Floors'];
-                        WZT.Data.Floors = 3;
                         WZT.Data.BaseMap = data1['building']['BaseMap'];
                         WZT.Data.B_Type = data1['building']["B_Type"];
                         //初始化
                         WZT.initBuilding();
-                        $('.cd-start').on('click', WZT.buildingChooseAni); //绑定点击事件
-                        //处理room节点
-                        $.each(data1['room'], function(name, value) {
-                            addNewLegendFromDB(value['X'], value['Y'], value['Floor'], name);
-                            WZT.Data.Facilitys[name] = value['facility'];
-                            //TODO
+                        initLoc();
 
-                        });
+                        $('.cd-start').on('click', WZT.buildingChooseAni); //绑定点击事件
+
                     },
                     error: function(xhr, textStatus, errorThrown) {
                         //called when there is an error
@@ -166,7 +163,7 @@ jQuery(document).ready(function($) {
         $('#legend-pannel').hide(400);
         $('#roomInfo-pannel').hide(400);
         $(WZT.Area.lastDrag).css({ 'top': 0, "left": 0 });
-        $(".cd-start").removeClass("showInArea");
+        $(".cd-start").parent().removeClass("showInArea");
         $(".cd-product-mockup").css({
             'overflow-y': '',
             'overflow-x': ''
@@ -267,10 +264,10 @@ jQuery(document).ready(function($) {
             var Y2 = Y1 + $(this)[0].clientHeight;
             var X2 = X1 + $(this)[0].clientWidth;
             if (X1 > WZT.Area.X1 && X2 < WZT.Area.X2 && Y1 > WZT.Area.Y1 && Y2 < WZT.Area.Y2) {
-                $(".cd-start").addClass("showInArea");
+                $(".cd-start").parent().addClass("showInArea");
                 WZT.Area.status = 2;
             } else {
-                $(".cd-start").removeClass("showInArea");
+                $(".cd-start").parent().removeClass("showInArea");
                 WZT.Area.status = 1;
             }
             // console.log(X, Y);
@@ -287,7 +284,7 @@ jQuery(document).ready(function($) {
         })
         $(domName).on('staticClick', function(event, pointer) {
             var dom = this;
-            $(".cd-start").removeClass("showInArea");
+            $(".cd-start").parent().removeClass("showInArea");
             if (WZT.Area.lastDrag != this) {
                 $(WZT.Area.lastDrag).css({ 'top': 0, "left": 0 });
             } else if (WZT.Area.status == 2) {
@@ -307,37 +304,12 @@ jQuery(document).ready(function($) {
         var Y1 = container.offset().top;
         var x1 = $(dom).offset().left;
         var y1 = $(dom).offset().top;
-        var domName = '<li class="room-legend" style="top:' + (y1 - Y1) + 'px;left:' + (x1 - X1) + 'px;"></li>'
-        console.log()
-        $("#cd-floor-" + WZT.edit_Floor + " ul").append(domName);
+        var style = $(dom).attr('data-id');
 
-        //后台添加，返回ID， TODO
-        var data = {
-            "B_ID": WZT.Data.B_ID,
-            "Floor": WZT.edit_Floor,
-            "L_ID": WZT.edit_Legend,
-            "X": (x1 - X1),
-            "Y": (y1 - Y1),
-            "R_Name": '',
-            "R_Area": ''
-        }
-        console.log(data)
-
-        var dom = $("#cd-floor-" + WZT.edit_Floor + " ul li:last-child");
-        dom[0].setAttribute('data-r_id', 0);
+        //添加到json
+        addPoint(x1 - X1, y1 - Y1, style);
+        console.log(JSON.stringify(WZT.Loc.Json));
     }
-
-    function addNewLegendFromDB(X, Y, Floor, B_ID) {
-        //前台处理
-        var x1 = parseFloat(X);
-        var y1 = parseFloat(Y);
-        var domName = '<li class="room-legend" style="top:' + y1 + 'px;left:' + x1 + 'px;"></li>';
-        $("#cd-floor-" + Floor + " ul").append(domName);
-        $("#cd-floor-" + Floor + " ul li:last-child")[0].setAttribute('data-r_id', B_ID);
-    }
-
-
-
 
     WZT.Loc = {};
     WZT.Loc.countPoint = 0;
@@ -346,9 +318,9 @@ jQuery(document).ready(function($) {
         "points": {},
         "edges": {},
         "floorPoints": {},
-        "enter": {}
+        "enter": []
     };
-
+    WZT.Loc.LinePointLast = null; //保存上一个选择的点
     function initLoc() {
         for (var i = 0; i < WZT.Data.Floors; i++)
             WZT.Loc.Json['floorPoints'][i] = new Array()
@@ -356,50 +328,92 @@ jQuery(document).ready(function($) {
 
     function drawLine(A_X, A_Y, B_X, B_Y, dom) {
         var add = 0;
+        var sub = 1;
         if (A_Y > B_Y) {
             [A_X, B_X] = [B_X, A_X];
             [A_Y, B_Y] = [B_Y, A_Y];
+        }
+        if (A_X > B_X) {
+            sub = -1;
         }
         var D_X = Math.abs(A_X - B_X);
         var D_Y = Math.abs(A_Y - B_Y);
         var midpoint = {}
         midpoint.left = (B_X + A_X) / 2;
-        midpoint.top = A_Y;
-        var rotate = Math.atan(D_X / D_Y) * 180 / Math.PI;
-        console.log(rotate);
-        var length = Math.sqrt(D_X * D_X + D_Y * D_Y)
-        var domName = '<div class="Floor_line" style="top:' + midpoint.top + 'px;left:' + midpoint.left + 'px;height:' + length + 'px;transform:rotate(-' + (rotate + add) + 'deg);"></div>'
+        var rotate = -1 * sub * Math.atan(D_X / D_Y) * 180 / Math.PI;
+        var length = Math.sqrt(D_X * D_X + D_Y * D_Y);
+        midpoint.top = (A_Y + B_Y) / 2 - length / 2;
+        var domName = '<div class="Floor_line" style="top:' + (midpoint.top + 25) + 'px;left:' + (midpoint.left + 25) + 'px;height:' + length + 'px;transform:rotate(' + rotate + 'deg);"></div>'
         $(dom).append(domName);
     }
-    drawLine(20, 20, 10, 10, '.cd-start');
-
-    function addPoint(x, y, f) {
-
-
-    }
-
-    function addStair() {
-
-    }
-
-    function addElevator() {
-
-    }
-
-    function addSameLegend(X, Y, From, To, Type) {
-        //前台处理
+    /*
+     添加点，添加到POINTS中
+     */
+    function addPoint(X, Y, Type) {
+        var From = parseInt($('#stair-from').val()) - 1;
+        var To = parseInt($('#stair-to').val()) - 1;
+        if (Type == 4) {
+            From = TO = 1;
+        }
+        console.log(X, Y, Type, From, To)
+            //前台处理
         var x1 = parseFloat(X);
         var y1 = parseFloat(Y);
-        for (var i = From; i < To; i++) {
+        for (var i = From; i <= To; i++) {
             var domName = '<li class="room-legend location-legend" style="top:' + y1 + 'px;left:' + x1 + 'px;"></li>';
             $("#cd-floor-" + i + " ul").append(domName);
             $("#cd-floor-" + i + " ul li:last-child")[0].setAttribute('data-id', WZT.Loc.countPoint);
             //后台添加
-            WZT.Loc.Json['points']
-            WZT.Loc.Json['floorPoints'][i][WZT.Loc.countPoint]
+            WZT.Loc.Json['points'][WZT.Loc.countPoint] = { "X": x1, "Y": y1 };
+            WZT.Loc.Json['floorPoints'][i].push(WZT.Loc.countPoint);
             WZT.Loc.countPoint++;
+            if (Type == 2 && (i + 1) < To) {
+                WZT.Loc.Json['edges'][WZT.Loc.countEdge] = { "A": WZT.Loc.countPoint, "B": WZT.Loc.countPoint + 1, "Weight": 50 };
+                WZT.Loc.countEdge++;
+            } else if (Type == 3 && (i + 1) < To) {
+                WZT.Loc.Json['edges'][WZT.Loc.countEdge] = { "A": WZT.Loc.countPoint, "B": WZT.Loc.countPoint + 1, "Weight": 40 };
+                WZT.Loc.countEdge++;
+            }
         }
+    }
+    $('#createLine').click(function() {
+        $('.location-legend').unbind();
+        $('.location-legend').bind('click', clickPoint);
+    })
+    $('#stopCreate').click(function() {
+        $('.location-legend').unbind();
+    })
+    $('#jsonSave').click(function() {
 
+    })
+
+    function clickPoint() {
+        if (WZT.Loc.LinePointLast == null) {
+            WZT.Loc.LinePointLast = this;
+            $(this).addClass('showInPoint');
+        } else {
+            var First = $(WZT.Loc.LinePointLast);
+            var Second = $(this);
+            var A = First.data('id');
+            var B = Second.data('id');
+            var AX = parseFloat(First.css('left'));
+            var AY = parseFloat(First.css('top'));
+            var BX = parseFloat(Second.css('left'));
+            var BY = parseFloat(Second.css('top'));
+            var Weight = Math.sqrt((AX - BX) * (AX - BX) + (AY - BY) * (AY - BY));
+            addLine(A, B, Weight);
+            drawLine(AX, AY, BX, BY, $('#loc-' + WZT.edit_Floor));
+            $(WZT.Loc.LinePointLast).removeClass('showInPoint')
+            WZT.Loc.LinePointLast = null;
+        }
+        console.log(JSON.stringify(WZT.Loc.Json))
+    }
+    /*
+
+    */
+    function addLine(A, B, Weight) {
+        WZT.Loc.Json['edges'][WZT.Loc.countEdge] = { 'A': A, 'B': B, 'Weight': Weight }
+        WZT.Loc.countEdge++;
     }
 
 });

@@ -8,6 +8,11 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/add.css">
     <link rel="stylesheet" href="css/animate.min.css">
+    <style type="text/css">
+    #copy-Legend input {
+        width: 40px;
+    }
+    </style>
 </head>
 
 <body>
@@ -22,52 +27,39 @@
         <div id="cd-floor-0" class="cd-product-mockup">
             <div class="cd-start"></div>
             <ul class="cd-points-container points-enlarged points-pulsing">
-                <li class="cd-single-point ">
-                    <a class="cd-img-replace" href="#">More info</a>
-                    <div class="cd-more-info cd-left">
-                        <h2>Title</h2>
-                    </div>
-                </li>
-                <li class="cd-single-point">
-                    <a class="cd-img-replace" href="#">More info</a>
-                    <div class="cd-more-info cd-left">
-                        <h2>Title</h2>
-                    </div>
-                </li>
-                <li class="cd-single-point">
-                    <a class="cd-img-replace" href="#">More info</a>
-                    <div class="cd-more-info cd-right">
-                        <h2>Title</h2>
-                    </div>
-                </li>
             </ul>
+            <div id='loc-0'></div>
             <div class="cd-3d-right-side"></div>
             <div class="cd-3d-bottom-side"></div>
         </div>
         <a href="#" class="cd-close-product-tour cd-img-replace">返回</a>
     </section>
     <section id="legend-pannel">
-        <div id="switch_btn">图例板</div>
+        <div id="switch_btn">快捷添加</div>
         <div id="copy-Legend">
-            <input type="number" name="From">
-            <input type="number" name="To">
+            从
+            <input id="stair-from" type="text" name="From">楼到
+            <input id="stair-to" type="text" name="To">楼
+            <button id="createLine">创建节点连线</button>
+            <button id="stopCreate">结束创建</button>
+            <button id="jsonSave">保存</button>
         </div>
         <div id="Legend">
             <ul>
                 <li>
-                    <div class="box-legend">A</div>
+                    <div class="box-legend" data-id="1">A</div>
                     <div class="text-legend">普通节点</div>
                 </li>
                 <li>
-                    <div class="box-legend">B</div>
+                    <div class="box-legend" data-id="2">B</div>
                     <div class="text-legend">楼道节点</div>
                 </li>
                 <li>
-                    <div class="box-legend">C</div>
+                    <div class="box-legend" data-id="3">C</div>
                     <div class="text-legend">电梯节点</div>
                 </li>
                 <li>
-                    <div class="box-legend">C</div>
+                    <div class="box-legend" data-id="4">D</div>
                     <div class="text-legend">入口节点</div>
                 </li>
             </ul>
@@ -78,11 +70,6 @@
     </section>
     <section id="location-pannel">
     </section>
-    <div id="dialog-modal">
-        从
-        <input id="stair-from" type="number" name="From">楼到
-        <input id="stair-to" type="number" name="To">楼
-    </div>
     <!-- 室内地图自动大小功能 -->
     <!--     <div id="autoMap" style="position:absolute;">
         <img src="img/cd-app-image.png">
