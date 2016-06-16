@@ -7,7 +7,7 @@ include("DBconn.php");
 @$Y=$_POST["Y"];
 @$R_Name=$_POST["R_Name"];
 @$R_Area=$_POST["R_Area"];
-$result=mysql_query("INSERT INTO room(B_ID,Floor,L_ID,X,Y,R_Name,R_Area) VALUES($B_ID,$Floor,$L_ID,$X,$Y,'$R_Name','$R_Area')");
+$result=mysql_query("INSERT INTO room(B_ID,Floor,L_ID,X,Y,R_Name,R_Area) VALUES($B_ID,$Floor,'$L_ID',$X,$Y,'$R_Name','$R_Area')");
 $result1=mysql_query("SELECT * FROM room WHERE R_Name='$R_Name' AND X=$X AND Y=$Y AND Floor=$Floor");
 $R_ID=0;
 while ($row=mysql_fetch_array($result1) ){
