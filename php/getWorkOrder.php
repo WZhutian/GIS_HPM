@@ -11,7 +11,7 @@ while($row = mysql_fetch_array($result))
       $New_arr["Done"]=$row["Done"];
       $data[$row["W_ID"]]=$New_arr;
   }
-  $json_data=json_encode($data);
+  $json_data=json_encode($data,JSON_UNESCAPED_UNICODE);
   echo $json_data;
 mysql_close($conn);
  ?>

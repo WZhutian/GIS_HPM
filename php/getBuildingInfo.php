@@ -46,7 +46,7 @@ while ($row=mysql_fetch_array($result2)) {
 $data=array();
 $data["building"]=$building_data;
 $data["room"]=$room_data;
-$json_data=json_encode($data);
+$json_data=json_encode($data,JSON_UNESCAPED_UNICODE);
 
 echo( $json_data);
 mysql_close($conn);
