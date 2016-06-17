@@ -3,6 +3,7 @@
 <head>
 <!-- <meta charset="gb2312"> -->
 <meta name="viewport" content="width=device-width">
+<!-- <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> -->
 <title>PAGE1</title>
 <!-- <link rel='stylesheet prefetch' href='http://libs.useso.com/js/font-awesome/4.2.0/css/font-awesome.min.css'> -->
 <link rel="stylesheet" type="text/css" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
@@ -39,6 +40,7 @@
   <script src="assets/js/es6-promise.min.js"></script>
   <script src="assets/js/fetch.js"></script>
   <script src="assets/js/tspant.js"></script>
+  <!-- 打印地图 -->
   <script type="text/javascript" src="js/FileSaver.js"></script>
   <script type="text/javascript" src="js/canvas-toBlob.js"></script>
 <!--[if IE 7]>
@@ -49,6 +51,20 @@
 	<link href="css/blue/desktop-ie.css" rel="stylesheet" type="text/css">
 <![endif]-->
 <style>
+.Detail
+{
+    border-right: #7b9ebd 1px solid;
+    padding-right: 2px;
+    border-top: #7b9ebd 1px solid;
+    padding-left: 2px;
+    font-size: 12px;
+    FILTER: progid:DXImageTransform.Microsoft.Gradient(GradientType=0,  StartColorStr=#ffffff,  EndColorStr=#cecfde);
+    border-left: #7b9ebd 1px solid;
+    cursor: hand;
+    color: black;
+    padding-top: 2px;
+    border-bottom: #7b9ebd 1px solid;
+}
       .ol-popup {
         position: absolute;
         background-color: white;
@@ -286,11 +302,27 @@ $(document).ready(function (ev) {
           format: new ol.format.KML()
         })
       });
+
+//面的样式
+var polygonStyle = new ol.style.Style({
+  fill: new ol.style.Fill({ //矢量图层填充颜色，以及透明度
+    color: 'rgba(255, 255, 255, 0.5)'
+  }),
+  stroke: new ol.style.Stroke({ //边界样式
+    color: '#319FD3',
+    width: 2
+  })
+});
+     console.log(polygonStyle);
+
      var geoJSON_region = new ol.layer.Vector({
         source: new ol.source.Vector({
-          url: 'data/json/basemap_geojson.json',
+          url: 'data/json/basemap2geojsonutf8.json',
+          // url: 'data/json/basemap_geojson.json',
           format: new ol.format.GeoJSON()
-        })
+        }),
+        style: polygonStyle
+
       });
      console.log(geoJSON_region);
      console.log(vector_region);
@@ -308,9 +340,8 @@ $(document).ready(function (ev) {
 //定义OL地图
     var map=new ol.Map({
      target: 'map',//定义显示容器
-      // layers:[vector_region],//按顺序添加图层
-      layers:[geoJSON_region,openStreetMapLayer],//按顺序添加图层
-      // layers:[vector_region,openStreetMapLayer],//按顺序添加图层
+      layers:[openStreetMapLayer,geoJSON_region],//按顺序添加图层
+      // layers:[geoJSON_region,openStreetMapLayer],//按顺序添加图层
       controls: ol.control.defaults().extend([
           new ol.control.OverviewMap()
         ]),
@@ -355,19 +386,20 @@ function mapclick(evt)
    clearmeasure();
   var pixel = map.getEventPixel(evt.originalEvent);
   var feature = map.forEachFeatureAtPixel(pixel, function(feature, layer) {
-    console.log(feature.getId());
+    console.log(feature);
     return feature;
   });
   var coordinate = evt.coordinate;
   var hdms = ol.coordinate.toStringHDMS(ol.proj.transform(
       coordinate, 'EPSG:3857', 'EPSG:4326'));
   if(feature!==undefined){
-    console.log(feature.get);
-      content.innerHTML = '<p>你点击的坐标是：</p><code>' + hdms + '</code><p>这里属于：'+ feature.get('area') + '</p>'+' <button id="Detail"  type="button">查看详情</button>';
+      content.innerHTML = '<p>你点击的坐标是：</p><code>' + hdms + '</code><p>这里属于：'+ feature.get('name') + '</p>'+
+      ' <a id="Detail"  href=localhost:8081/GIS_HPM/?abc='+ feature.get('name') + '>查看详情</a>';
+      // content.innerHTML = '<p>你点击的坐标是：</p><code>' + hdms + '</code><p>这里属于：'+ feature.get('name') + '</p>'+' <button id="Detail"  type="button">查看详情</button>';
 
   }
   else{
-      content.innerHTML = '<p>你点击的坐标是：</p><code>' + hdms + '</code><p>这里是大海！</p>';
+      content.innerHTML = '<p>你点击的坐标是：</p><code>' + hdms + '</code><p>这里尚未统计在房产系统中！</p>';
   }
   overlay.setPosition(coordinate);
   map.addOverlay(overlay);
