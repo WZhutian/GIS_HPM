@@ -101,6 +101,9 @@ jQuery(document).ready(function($) {
                         $(".room-legend").each(function() {
                             $(this).animate({ 'top': parseFloat($(this).css('top')) / WZT.topChange + 'px', 'left': parseFloat($(this).css('left')) / WZT.widthChange + 'px', 'height': '50px', 'width': '50px' })
                         });
+                        $(".Floor_line").each(function() {
+                            $(this).animate({ 'top': parseFloat($(this).css('top')) / WZT.topChange + 'px', 'left': parseFloat($(this).css('left')) / WZT.widthChange + 'px', 'height': parseFloat($(this).css('height')) / WZT.topChange + 'px', 'width': parseFloat($(this).css('width')) / WZT.widthChange + 'px' });
+                        });
                     }
                 });
             }
@@ -175,6 +178,9 @@ jQuery(document).ready(function($) {
         }, 800)
         $(".room-legend").each(function() {
             $(this).animate({ 'top': parseFloat($(this).css('top')) * WZT.topChange + 'px', 'left': parseFloat($(this).css('left')) * WZT.widthChange + 'px', 'height': 50 * WZT.topChange + 'px', 'width': 50 * WZT.widthChange + 'px' });
+        });
+        $(".Floor_line").each(function() {
+            $(this).animate({ 'top': parseFloat($(this).css('top')) * WZT.topChange + 'px', 'left': parseFloat($(this).css('left')) * WZT.widthChange + 'px', 'height': parseFloat($(this).css('height')) * WZT.topChange + 'px', 'width': parseFloat($(this).css('width')) * WZT.widthChange + 'px' });
         });
     });
     //其他楼层动画
@@ -307,7 +313,7 @@ jQuery(document).ready(function($) {
         var style = $(dom).attr('data-id');
 
         //添加到json
-        addPoint(x1 - X1, y1 - Y1, style);
+        addPoint(x1 - X1, y1 - Y1, style, $(dom).html());
         console.log(JSON.stringify(WZT.Loc.Json));
     }
 
@@ -322,6 +328,34 @@ jQuery(document).ready(function($) {
     };
     WZT.Loc.LinePointLast = null; //保存上一个选择的点
     function initLoc() {
+        $.getJSON("./loc/" + WZT.Data.B_ID + ".json", function(result) {
+            console.log(result)
+            result['']
+            for (var i = 0; i < result['floorPoints'].length; i++) {
+                for (var j = 0; j < result['floorPoints'][i].length; j++) {
+                    var pointid = result['floorPoints'][i][j];
+                    var domName = '<li class="room-legend location-legend" style="top:' + result['points'][pointid]['Y'] + 'px;left:' + result['points'][pointid]['X'] + 'px;"></li>';
+                    $("#cd-floor-" + i + " ul").append(domName);
+                    $("#cd-floor-" + i + " ul li:last-child")[0].setAttribute('data-id', pointid);
+                }
+            }
+            for (var k = 0; k < result['edges'].length; k++) {
+                var A = result['edges'][k]['A'];
+                var B = result['edges'][k]['B'];
+                var floor = result['edges'][k]['Floor'];
+                console.log(A, B, floor)
+                var domName = $('#loc-' + floor)
+                drawLine(parseFloat(result['points'][A]['X']), parseFloat(result['points'][A]['Y']), parseFloat(result['points'][B]['X']), parseFloat(result['points'][B]['Y']), domName)
+            }
+            //
+            $(".room-legend").each(function() {
+                $(this).animate({ 'top': parseFloat($(this).css('top')) * WZT.topChange + 'px', 'left': parseFloat($(this).css('left')) * WZT.widthChange + 'px', 'height': 50 * WZT.topChange + 'px', 'width': 50 * WZT.widthChange + 'px' });
+            });
+            $(".Floor_line").each(function() {
+                $(this).animate({ 'top': parseFloat($(this).css('top')) * WZT.topChange + 'px', 'left': parseFloat($(this).css('left')) * WZT.widthChange + 'px', 'height': parseFloat($(this).css('height')) * WZT.topChange + 'px', 'width': parseFloat($(this).css('width')) * WZT.widthChange + 'px' });
+            });
+        });
+
         for (var i = 0; i < WZT.Data.Floors; i++)
             WZT.Loc.Json['floorPoints'][i] = new Array()
     }
@@ -349,31 +383,35 @@ jQuery(document).ready(function($) {
     /*
      添加点，添加到POINTS中
      */
-    function addPoint(X, Y, Type) {
+    function addPoint(X, Y, Type, ht) {
         var From = parseInt($('#stair-from').val()) - 1;
         var To = parseInt($('#stair-to').val()) - 1;
         if (Type == 4) {
-            From = TO = 1;
+            From = To = 0;
         }
         console.log(X, Y, Type, From, To)
             //前台处理
         var x1 = parseFloat(X);
         var y1 = parseFloat(Y);
         for (var i = From; i <= To; i++) {
-            var domName = '<li class="room-legend location-legend" style="top:' + y1 + 'px;left:' + x1 + 'px;"></li>';
+            var domName = '<li class="room-legend location-legend" style="top:' + y1 + 'px;left:' + x1 + 'px;">' + ht + '</li>';
             $("#cd-floor-" + i + " ul").append(domName);
             $("#cd-floor-" + i + " ul li:last-child")[0].setAttribute('data-id', WZT.Loc.countPoint);
             //后台添加
+            if (Type == 4) {
+                WZT.Loc.Json['enter'].push(WZT.Loc.countPoint);
+            }
             WZT.Loc.Json['points'][WZT.Loc.countPoint] = { "X": x1, "Y": y1 };
             WZT.Loc.Json['floorPoints'][i].push(WZT.Loc.countPoint);
-            WZT.Loc.countPoint++;
-            if (Type == 2 && (i + 1) < To) {
-                WZT.Loc.Json['edges'][WZT.Loc.countEdge] = { "A": WZT.Loc.countPoint, "B": WZT.Loc.countPoint + 1, "Weight": 50 };
+
+            if (Type == 2 && (i + 1) <= To) {
+                WZT.Loc.Json['edges'][WZT.Loc.countEdge] = { "A": WZT.Loc.countPoint, "B": WZT.Loc.countPoint + 1, "Weight": 500, 'Floor': i };
                 WZT.Loc.countEdge++;
-            } else if (Type == 3 && (i + 1) < To) {
-                WZT.Loc.Json['edges'][WZT.Loc.countEdge] = { "A": WZT.Loc.countPoint, "B": WZT.Loc.countPoint + 1, "Weight": 40 };
+            } else if (Type == 3 && (i + 1) <= To) {
+                WZT.Loc.Json['edges'][WZT.Loc.countEdge] = { "A": WZT.Loc.countPoint, "B": WZT.Loc.countPoint + 1, "Weight": 400, 'Floor': i };
                 WZT.Loc.countEdge++;
             }
+            WZT.Loc.countPoint++;
         }
     }
     $('#createLine').click(function() {
@@ -384,7 +422,12 @@ jQuery(document).ready(function($) {
         $('.location-legend').unbind();
     })
     $('#jsonSave').click(function() {
-
+        var data = {
+            'fName': WZT.Data.B_ID + '.json',
+            'data': WZT.Loc.Json
+        }
+        console.log(JSON.stringify(data));
+        Locfile(data);
     })
 
     function clickPoint() {
@@ -412,8 +455,27 @@ jQuery(document).ready(function($) {
 
     */
     function addLine(A, B, Weight) {
-        WZT.Loc.Json['edges'][WZT.Loc.countEdge] = { 'A': A, 'B': B, 'Weight': Weight }
+        WZT.Loc.Json['edges'][WZT.Loc.countEdge] = { 'A': A, 'B': B, 'Weight': Weight, 'Floor': WZT.edit_Floor }
         WZT.Loc.countEdge++;
     }
 
+    function Locfile(data) {
+        var url = './php/Locfile.php';
+        jQuery.ajax({
+            url: url,
+            data: data,
+            type: 'POST',
+            // dataType: 'json',
+            complete: function(xhr, textStatus) {
+                //called when complete
+            },
+            success: function(data, textStatus, xhr) {
+                //called when successful
+                console.log(data);
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                //called when there is an error
+            }
+        });
+    }
 });
