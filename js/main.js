@@ -31,7 +31,7 @@ jQuery(document).ready(function($) {
 
 
         for (var i = 1; i < WZT.Data.Floors; i++) {
-            var addFloorDom = "<div id='cd-floor-" + i + "' class='cd-product-mockup' style='top:" + (WZT.AllRecored.zeroTop - i * WZT.AllRecored.heightEvery) + "px;'><div class='cd-start container' style='background-image:url(./map/" + WZT.Data.BaseMap[i + 1]['BaseMap'] + ".png)'></div><ul></ul><div id='loc-" + i + "'></div><div class='cd-3d-right-side'></div><div class='cd-3d-bottom-side'></div></div>";
+            var addFloorDom = "<div id='cd-floor-" + i + "' class='cd-product-mockup' style='top:" + (WZT.AllRecored.zeroTop - i * WZT.AllRecored.heightEvery) + "px;'><div class='cd-start container' style='background-image:url(./map/" + WZT.Data.BaseMap[i + 1]['BaseMap'] + ".png)'></div><ul></ul><div id='loc-" + i + "' class='loc-contain'></div><div class='cd-3d-right-side'></div><div class='cd-3d-bottom-side'></div></div>";
             $('.cd-product').append(addFloorDom);
         }
         //初始化楼层平台大小
@@ -482,6 +482,7 @@ jQuery(document).ready(function($) {
 
 
     function drawLoc(array) {
+        $('.loc-contain').html('')
         $.each(array, function(name, value) {
             console.log(value)
         });
