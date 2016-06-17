@@ -1,10 +1,14 @@
 jQuery(document).ready(function($) {
-    //初始化变量区域————————————————————————————————
+    //图标初始化
+    $('.box-legend').each(function() {
+            $(this).css('background-image', 'url(./legend/' + $(this).data('id') + '.png)')
+            $(this).css('background-size', '100%')
+        })
+        //初始化变量区域————————————————————————————————
     var WZT = {};
     //用户选择的部分
     WZT.edit_Floor = 0;
     WZT.edit_Room = 0;
-    WZT.edit_Legend = 0;
     WZT.Data = {}; //用来保存后台回去的所有数据
     WZT.AllRecored = {}; //用来暂存临时变量
     WZT.Data.Floors = 0; //总楼层数
@@ -26,7 +30,7 @@ jQuery(document).ready(function($) {
 
 
         for (var i = 1; i < WZT.Data.Floors; i++) {
-            var addFloorDom = "<div id='cd-floor-" + i + "' class='cd-product-mockup' style='top:" + (WZT.AllRecored.zeroTop - i * WZT.AllRecored.heightEvery) + "px;'><div class='cd-start container' style='background-image:url(./map/" + WZT.Data.B_ID + "_" + WZT.Data.BaseMap[i]['BaseMap'] + ".png)'></div><ul></ul><div class='cd-3d-right-side'></div><div class='cd-3d-bottom-side'></div></div>";
+            var addFloorDom = "<div id='cd-floor-" + i + "' class='cd-product-mockup' style='top:" + (WZT.AllRecored.zeroTop - i * WZT.AllRecored.heightEvery) + "px;'><div class='cd-start container' style='background-image:url(./map/" + WZT.Data.BaseMap[i + 1]['BaseMap'] + ".png)'></div><ul></ul><div id='loc-" + i + "'></div><div class='cd-3d-right-side'></div><div class='cd-3d-bottom-side'></div></div>";
             $('.cd-product').append(addFloorDom);
         }
         //初始化楼层平台大小
@@ -40,14 +44,17 @@ jQuery(document).ready(function($) {
             WZT.heightNew = pic_real_height / pic_real_width * 440 + "px";
             $(".cd-start").css('width', WZT.widthNew);
             $(".cd-3d-bottom-side").css('width', WZT.widthNew);
-            WZT.topChange = 800 / parseInt(WZT.heightNew);
-            WZT.widthChange = parseInt(WZT.widthNew) / (440 / 450) / 100;
+            WZT.topChange = 800 / parseFloat(WZT.heightNew);
+            WZT.widthChange = parseFloat(WZT.widthNew) / (440 / 450) / 100;
 
             //
             $(".room-legend").each(function() {
                 $(this).animate({ 'top': parseFloat($(this).css('top')) * WZT.topChange + 'px', 'left': parseFloat($(this).css('left')) * WZT.widthChange + 'px', 'height': 50 * WZT.topChange + 'px', 'width': 50 * WZT.widthChange + 'px' });
             });
         });
+
+
+
         // var image = new Image()
         // image.src = './map/' + WZT.Data.B_ID + '_1.png';
         // pic_real_width = image.naturalWidth; // Note: $(this).width() will not
@@ -97,7 +104,7 @@ jQuery(document).ready(function($) {
                         });
                         //点位置变化函数
                         $(".room-legend").each(function() {
-                            $(this).animate({ 'top': parseInt($(this).css('top')) / WZT.topChange + 'px', 'left': parseInt($(this).css('left')) / WZT.widthChange + 'px', 'height': '50px', 'width': '50px' })
+                            $(this).animate({ 'top': parseFloat($(this).css('top')) / WZT.topChange + 'px', 'left': parseFloat($(this).css('left')) / WZT.widthChange + 'px', 'height': '50px', 'width': '50px' })
                         });
                     }
                 });
@@ -111,7 +118,7 @@ jQuery(document).ready(function($) {
             var r = window.location.search.substr(1); //获取url中"?"符后的字符串
             var context = r.split('&');
             WZT.Data.B_ID = context[0].split('=')[1];
-            WZT.Data.B_ID = 1;
+            WZT.Data.B_ID = 52;
             console.log("ULR中的楼ID:", WZT.Data.B_ID);
             //从后台获取数据，
             var data = { "B_ID": WZT.Data.B_ID };
@@ -132,7 +139,7 @@ jQuery(document).ready(function($) {
                         //处理building信息
                         WZT.Data.B_Name = data1['building']['B_Name'];
                         WZT.Data.Floors = data1['building']['Floors'];
-                        WZT.Data.Floors = 3;
+                        WZT.Data.Floors = 7;
                         WZT.Data.BaseMap = data1['building']['BaseMap'];
                         WZT.Data.B_Type = data1['building']["B_Type"];
                         //初始化
@@ -140,7 +147,7 @@ jQuery(document).ready(function($) {
                         $('.cd-start').on('click', WZT.buildingChooseAni); //绑定点击事件
                         //处理room节点
                         $.each(data1['room'], function(name, value) {
-                            addNewLegendFromDB(value['X'], value['Y'], value['Floor'], name);
+                            addNewLegendFromDB(value['X'], value['Y'], value['Floor'], name,value['L_ID']);
                             WZT.Data.Facilitys[name] = value['facility'];
                             //TODO
 
@@ -166,7 +173,7 @@ jQuery(document).ready(function($) {
         $('#legend-pannel').hide(400);
         $('#roomInfo-pannel').hide(400);
         $(WZT.Area.lastDrag).css({ 'top': 0, "left": 0 });
-        $(".cd-start").removeClass("showInArea");
+        $(".cd-start").parent().removeClass("showInArea");
         $(".cd-product-mockup").css({
             'overflow-y': '',
             'overflow-x': ''
@@ -267,10 +274,10 @@ jQuery(document).ready(function($) {
             var Y2 = Y1 + $(this)[0].clientHeight;
             var X2 = X1 + $(this)[0].clientWidth;
             if (X1 > WZT.Area.X1 && X2 < WZT.Area.X2 && Y1 > WZT.Area.Y1 && Y2 < WZT.Area.Y2) {
-                $(".cd-start").addClass("showInArea");
+                $(".cd-start").parent().addClass("showInArea");
                 WZT.Area.status = 2;
             } else {
-                $(".cd-start").removeClass("showInArea");
+                $(".cd-start").parent().removeClass("showInArea");
                 WZT.Area.status = 1;
             }
             // console.log(X, Y);
@@ -287,7 +294,7 @@ jQuery(document).ready(function($) {
         })
         $(domName).on('staticClick', function(event, pointer) {
             var dom = this;
-            $(".cd-start").removeClass("showInArea");
+            $(".cd-start").parent().removeClass("showInArea");
             if (WZT.Area.lastDrag != this) {
                 $(WZT.Area.lastDrag).css({ 'top': 0, "left": 0 });
             } else if (WZT.Area.status == 2) {
@@ -307,15 +314,15 @@ jQuery(document).ready(function($) {
         var Y1 = container.offset().top;
         var x1 = $(dom).offset().left;
         var y1 = $(dom).offset().top;
-        var domName = '<li class="room-legend" style="top:' + (y1 - Y1) + 'px;left:' + (x1 - X1) + 'px;"></li>'
-        console.log()
+        var id = $(dom).data('id');
+        var domName = '<li class="room-legend" style="top:' + (y1 - Y1) + 'px;left:' + (x1 - X1) + 'px;background-image:url(./legend/' + id + '.png);background-size:100%;"></li>'
         $("#cd-floor-" + WZT.edit_Floor + " ul").append(domName);
 
         //后台添加，返回ID， TODO
         var data = {
             "B_ID": WZT.Data.B_ID,
             "Floor": WZT.edit_Floor,
-            "L_ID": WZT.edit_Legend,
+            "L_ID": id,
             "X": (x1 - X1),
             "Y": (y1 - Y1),
             "R_Name": '',
@@ -336,7 +343,9 @@ jQuery(document).ready(function($) {
                 success: function(data, textStatus, xhr) {
                     //called when successful
                     console.log(data)
-                    dom[0].setAttribute('data-r_id', data['R_ID']);
+                    if (data == 0)
+                        alert('添加失败，网络问题')
+                    dom[0].setAttribute('data-r_id', data);
                 },
                 error: function(xhr, textStatus, errorThrown) {
                     //called when there is an error
@@ -348,12 +357,12 @@ jQuery(document).ready(function($) {
         addRoom(data, WZT.edit_Floor, dom);
     }
 
-    function addNewLegendFromDB(X, Y, Floor, B_ID) {
+    function addNewLegendFromDB(X, Y, Floor, B_ID,id) {
         //前台处理
         var container = $("#cd-floor-" + Floor + " .cd-start");
         var x1 = parseFloat(X);
         var y1 = parseFloat(Y);
-        var domName = '<li class="room-legend" style="top:' + y1 + 'px;left:' + x1 + 'px;"></li>';
+        var domName = '<li class="room-legend" style="top:' + y1 + 'px;left:' + x1 + 'px;background-image:url(./legend/' + id + '.png);background-size:100%;"></li>';
         $("#cd-floor-" + Floor + " ul").append(domName);
         $("#cd-floor-" + Floor + " ul li:last-child")[0].setAttribute('data-r_id', B_ID);
     }
