@@ -10,185 +10,194 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/add.css">
     <link rel="stylesheet" href="css/animate.min.css">
-
-        <style type="text/css">
-/*        table
-        {
-            border: black solid 1px;
-            border-collapse: collapse;
-        }
-        td
-        {
-            border: black solid 1px;
-            padding: 3px;
-        }*/
-
-        .td_Num
-        {
-            width: 40px;
-            text-align: center;
-        }
-        .td_Item
-        {
-            width: 90px;
-            text-align: center;
-        }
-        .td_Oper
-        {
-            width: 120px;
-            text-align: center;
-        }
-        .td_Oper span
-        {
-            cursor: pointer;
-        }
+    <style type="text/css">
+    /* table { border: black solid 1px; border-collapse: collapse; } td { border: black solid 1px; padding: 3px; }*/
+    
+    .td_Num {
+        width: 40px;
+        text-align: center;
+    }
+    
+    .td_Item {
+        width: 90px;
+        text-align: center;
+    }
+    
+    .td_Oper {
+        width: 120px;
+        text-align: center;
+    }
+    
+    .td_Oper span {
+        cursor: pointer;
+    }
     </style>
     <style type="text/css">
-            .wm_right{
-  overflow-y:auto; 
-  overflow-x:hidden; 
-/*  position:fixed; z-index:2; top:60px; left:50%;*/
-  width:460px; height:470px; 
-    -moz-box-shadow:4px 4px 30px #130507;
-    -webkit-box-shadow:4px 4px 30px #130507;
-  box-shadow:4px 4px 30px #130507;
-    -moz-transition:top 800ms;
-    -o-transition:top 800ms;
-    -webkit-transition:top 800ms;
-  transition:top 800ms;
-            }
-                        .wm_addinfo{
-  overflow-y:auto; 
-  overflow-x:hidden; 
-  position:fixed; z-index:2; top:60px; left:50%;
-  width:460px; height:470px; background:#fff;
-    -moz-box-shadow:4px 4px 30px #130507;
-    -webkit-box-shadow:4px 4px 30px #130507;
-  box-shadow:4px 4px 30px #130507;
-    -moz-transition:top 800ms;
-    -o-transition:top 800ms;
-    -webkit-transition:top 800ms;
-  transition:top 800ms;
-  position: absolute;
-            }
-#add_Btn:hover {
-              background-color: gray;
-}
-#add_Btn{
-    border: solid black;
-    background-color: white;
-     float: left;
-    font-weight: bold;
-    padding: 2px;
-    width: 50px;
-    border-radius: 100px;
-    margin-left: 30px;
-    margin-top: 20px;
-    moz-user-select: -moz-none;
-    -moz-user-select: none;
-    -o-user-select: none;
-    -khtml-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    height: 35px;
-}
-.wm_info{
-      
-         border: solid gray;
-            border-radius: 100px;
-             margin-top: 10px;
-                width: 340px;
-                height: 40px;
-                margin:0 auto;
-
-}
-#wm_inp{
-    margin-left: 20px;
-width:300px;
-  height: 40px;
-  text-align: center;
-}
-#wm_inp2{
-    margin-left: 10px;
-width:280px;
-height: 40px;
-  text-align: center;
-}
-#wm_eachinfo{    
-      float: left;
-         border: solid gray;
-            border-radius: 100px;
-             margin-top: 18px;
-                width: 380px;
-                height: 40px;
-                    text-align: center;
-              }
-#add_Btn:active {
-    color: white;
-    background-color: #9A9595
-
-}#apply_Device div {
-    width: 100%;
-    text-align: right;
-    clear: both;
-}
-#apply_Device{
-    position: relative;
-    top: 50px;
-}
-#apply_Device ul {
-    width: 100%;
-    right: 80px;
-    list-style: none;
-    right: 60px;
+    .wm_right {
+        overflow-y: auto;
+        overflow-x: hidden;
+        /*  position:fixed; z-index:2; top:60px; left:50%;*/
+        width: 460px;
+        height: 470px;
+        -moz-box-shadow: 4px 4px 30px #130507;
+        -webkit-box-shadow: 4px 4px 30px #130507;
+        box-shadow: 4px 4px 30px #130507;
+        -moz-transition: top 800ms;
+        -o-transition: top 800ms;
+        -webkit-transition: top 800ms;
+        transition: top 800ms;
+    }
+    
+    .wm_addinfo {
+        overflow-y: auto;
+        overflow-x: hidden;
+        position: fixed;
+        z-index: 2;
+        top: 60px;
+        left: 50%;
+        width: 460px;
+        height: 470px;
+        background: #fff;
+        -moz-box-shadow: 4px 4px 30px #130507;
+        -webkit-box-shadow: 4px 4px 30px #130507;
+        box-shadow: 4px 4px 30px #130507;
+        -moz-transition: top 800ms;
+        -o-transition: top 800ms;
+        -webkit-transition: top 800ms;
+        transition: top 800ms;
+        position: absolute;
+    }
+    
+    #add_Btn:hover {
+        background-color: gray;
+    }
+    
+    #add_Btn {
+        border: solid black;
+        background-color: white;
+        float: left;
+        font-weight: bold;
+        padding: 2px;
+        width: 50px;
+        border-radius: 100px;
+        margin-left: 30px;
+        margin-top: 20px;
+        moz-user-select: -moz-none;
+        -moz-user-select: none;
+        -o-user-select: none;
+        -khtml-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        height: 35px;
+    }
+    
+    .wm_info {
+        border: solid gray;
+        border-radius: 100px;
+        margin-top: 10px;
+        width: 340px;
+        height: 40px;
+        margin: 0 auto;
+    }
+    
+    #wm_inp {
+        margin-left: 20px;
+        width: 300px;
+        height: 40px;
+        text-align: center;
+    }
+    
+    #wm_inp2 {
+        margin-left: 10px;
+        width: 280px;
+        height: 40px;
+        text-align: center;
+    }
+    
+    #wm_eachinfo {
+        float: left;
+        border: solid gray;
+        border-radius: 100px;
+        margin-top: 18px;
+        width: 380px;
+        height: 40px;
+        text-align: center;
+    }
+    
+    #add_Btn:active {
+        color: white;
+        background-color: #9A9595
+    }
+    
+    #apply_Device div {
+        width: 100%;
+        text-align: right;
         clear: both;
-}
-
-
-
-#apply_Device span {
-    padding: 5px;
-    font-size: 0.7em;
-}
-
-#apply_Device input {
-    text-align: center;
-    width: 130px;
-}
-/*table{border:solid gray;
+    }
+    
+    #apply_Device {
+        position: relative;
+        top: 50px;
+    }
+    
+    #apply_Device ul {
+        width: 100%;
+        right: 80px;
+        list-style: none;
+        right: 60px;
+        clear: both;
+    }
+    
+    #apply_Device span {
+        padding: 5px;
+        font-size: 0.7em;
+    }
+    
+    #apply_Device input {
+        text-align: center;
+        width: 130px;
+    }
+    /*table{border:solid gray;
 position: relative;
 top:50px;
 left:0px;
 }*/
-table{
-    background-color: white;
-}
- tr td,th{
-    border:solid black;
-    width: 70px;
-    height: 25px;
-
- }
-.wm_tb{
-    position: relative;
-    left:80px;
-    top:30px;
-}
-#deleRo{
-    border: solid black;
-     background-color: white;
-     width:35px;
-     height:35px;
-     position:relative; 
-     border-radius: 100px;
-     left:450px;
-     top:20px
-}
-</style>
+    
+    table {
+        background-color: white;
+    }
+    
+    tr td,
+    th {
+        border: solid black;
+        width: 70px;
+        height: 25px;
+    }
+    
+    .wm_tb {
+        position: relative;
+        left: 80px;
+        top: 30px;
+    }
+    
+    #deleRo {
+        border: solid black;
+        background-color: white;
+        width: 35px;
+        height: 35px;
+        position: relative;
+        border-radius: 100px;
+        left: 450px;
+        top: 20px
+    }
+    </style>
 </head>
 
 <body>
+    <div class='mask'>
+        <div class="spinner"></div>
+    </div>
     <section class="cd-product">
         <div class="cd-product-intro">
             <h1>这是XX楼</h1>
@@ -293,46 +302,43 @@ table{
         </div>
     </section>
     <section id="roomInfo-pannel">
-
         <!--     <div class="wm_right"> -->
-
-        <div class="wm_info"><input type="text"  value="wm" id="wm_inp"> </div>
+        <div class="wm_info">
+            <input type="text" value="wm" id="wm_inp"> </div>
         <div id="container" style="height: 80%"></div>
-    <!-- </div> -->
+        <!-- </div> -->
     </section>
-
     <section id="floorInfo-pannel">
-            <div id="add_Btn" onclick="add_line()">+</div>
+        <div id="add_Btn" onclick="add_line()">+</div>
         <div id="wm_eachinfo">
-        <input type="text"  value="wm" id="wm_inp2">
-</div>
-<div  id="deleRo"></div>
-<!-- <div id="apply_Device">
+            <input type="text" value="wm" id="wm_inp2">
+        </div>
+        <div id="deleRo"></div>
+        <!-- <div id="apply_Device">
                 <ul>
                 </ul>
             </div>  -->
-            <div class="wm_tb">
+        <div class="wm_tb">
             <table>
-        <tr>
-            <td class='td_Num'>
-                序号
-            </td>
-            <td class='td_Item'>
-                设备
-            </td>
-            <td class='td_Item'>
-                数量
-            </td>
-            <td class='td_Oper'>
-      <!--            <a href="#" onclick="add_line();">添加设备</a> -->
-                 <a href="#" onclick="SaveData();">保存</a>
-            </td>
-        </tr>
-    </table>
-    <table id="content">
-
-    </table>
-    </div>
+                <tr>
+                    <td class='td_Num'>
+                        序号
+                    </td>
+                    <td class='td_Item'>
+                        设备
+                    </td>
+                    <td class='td_Item'>
+                        数量
+                    </td>
+                    <td class='td_Oper'>
+                        <!--            <a href="#" onclick="add_line();">添加设备</a> -->
+                        <a href="#" onclick="SaveData();">保存</a>
+                    </td>
+                </tr>
+            </table>
+            <table id="content">
+            </table>
+        </div>
     </section>
     <!-- 室内地图自动大小功能 -->
     <!--     <div id="autoMap" style="position:absolute;">
@@ -343,7 +349,6 @@ table{
     <script src="js/draggabilly.pkgd.min.js"></script>
     <script>
     </script>
-
 </body>
 
 </html>

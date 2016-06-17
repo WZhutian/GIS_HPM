@@ -47,6 +47,9 @@ jQuery(document).ready(function($) {
             $(".room-legend").each(function() {
                 $(this).animate({ 'top': parseFloat($(this).css('top')) * WZT.topChange + 'px', 'left': parseFloat($(this).css('left')) * WZT.widthChange + 'px', 'height': 50 * WZT.topChange + 'px', 'width': 50 * WZT.widthChange + 'px' });
             });
+            $(".Floor_line").each(function() {
+                $(this).animate({ 'top': parseFloat($(this).css('top')) * WZT.topChange + 'px', 'left': parseFloat($(this).css('left')) * WZT.widthChange + 'px', 'height': parseFloat($(this).css('height')) * WZT.topChange + 'px', 'width': parseFloat($(this).css('width')) * WZT.widthChange + 'px' });
+            });
         });
         // var image = new Image()
         // image.src = './map/' + WZT.Data.B_ID + '_1.png';
@@ -144,7 +147,7 @@ jQuery(document).ready(function($) {
                         initLoc();
 
                         $('.cd-start').on('click', WZT.buildingChooseAni); //绑定点击事件
-
+                        $('.mask').css('display','none')
                     },
                     error: function(xhr, textStatus, errorThrown) {
                         //called when there is an error
@@ -328,39 +331,46 @@ jQuery(document).ready(function($) {
     };
     WZT.Loc.LinePointLast = null; //保存上一个选择的点
     function initLoc() {
-        $.getJSON("./loc/" + WZT.Data.B_ID + ".json", function(result) {
-            console.log(result)
-            result['']
-            for (var i = 0; i < result['floorPoints'].length; i++) {
-                for (var j = 0; j < result['floorPoints'][i].length; j++) {
-                    var pointid = result['floorPoints'][i][j];
-                    var domName = '<li class="room-legend location-legend" style="top:' + result['points'][pointid]['Y'] + 'px;left:' + result['points'][pointid]['X'] + 'px;"></li>';
-                    $("#cd-floor-" + i + " ul").append(domName);
-                    $("#cd-floor-" + i + " ul li:last-child")[0].setAttribute('data-id', pointid);
-                }
-            }
-            for (var k = 0; k < result['edges'].length; k++) {
-                var A = result['edges'][k]['A'];
-                var B = result['edges'][k]['B'];
-                var floor = result['edges'][k]['Floor'];
-                console.log(A, B, floor)
-                var domName = $('#loc-' + floor)
-                drawLine(parseFloat(result['points'][A]['X']), parseFloat(result['points'][A]['Y']), parseFloat(result['points'][B]['X']), parseFloat(result['points'][B]['Y']), domName)
-            }
-            //
-            $(".room-legend").each(function() {
-                $(this).animate({ 'top': parseFloat($(this).css('top')) * WZT.topChange + 'px', 'left': parseFloat($(this).css('left')) * WZT.widthChange + 'px', 'height': 50 * WZT.topChange + 'px', 'width': 50 * WZT.widthChange + 'px' });
-            });
-            $(".Floor_line").each(function() {
-                $(this).animate({ 'top': parseFloat($(this).css('top')) * WZT.topChange + 'px', 'left': parseFloat($(this).css('left')) * WZT.widthChange + 'px', 'height': parseFloat($(this).css('height')) * WZT.topChange + 'px', 'width': parseFloat($(this).css('width')) * WZT.widthChange + 'px' });
-            });
-        });
+        // $.getJSON("./loc/" + WZT.Data.B_ID + ".json", function(result) {
+        //     console.log(result)
+        //     result['']
+        //     for (var i = 0; i < result['floorPoints'].length; i++) {
+        //         for (var j = 0; j < result['floorPoints'][i].length; j++) {
+        //             var pointid = result['floorPoints'][i][j];
+        //             var domName = '<li class="room-legend location-legend" style="top:' + result['points'][pointid]['Y'] + 'px;left:' + result['points'][pointid]['X'] + 'px;"></li>';
+        //             $("#cd-floor-" + i + " ul").append(domName);
+        //             $("#cd-floor-" + i + " ul li:last-child")[0].setAttribute('data-id', pointid);
+        //         }
+        //     }
+        //     for (var k = 0; k < result['edges'].length; k++) {
+        //         var A = result['edges'][k]['A'];
+        //         var B = result['edges'][k]['B'];
+        //         var floor = result['edges'][k]['Floor'];
+        //         console.log(A, B, floor)
+        //         var domName = $('#loc-' + floor)
+        //         drawLine(parseFloat(result['points'][A]['X']), parseFloat(result['points'][A]['Y']), parseFloat(result['points'][B]['X']), parseFloat(result['points'][B]['Y']), domName)
+        //     }
+        //     //
+        //     $(".room-legend").each(function() {
+        //         $(this).animate({ 'top': parseFloat($(this).css('top')) * WZT.topChange + 'px', 'left': parseFloat($(this).css('left')) * WZT.widthChange + 'px', 'height': 50 * WZT.topChange + 'px', 'width': 50 * WZT.widthChange + 'px' });
+        //     });
+        //     console.log(123123)
+        //     $(".Floor_line").each(function() {
+        //         $(this).animate({ 'top': parseFloat($(this).css('top')) * WZT.topChange + 'px', 'left': parseFloat($(this).css('left')) * WZT.widthChange + 'px', 'height': parseFloat($(this).css('height')) * WZT.topChange + 'px', 'width': parseFloat($(this).css('width')) * WZT.widthChange + 'px' });
+        //     });
+        // });
 
         for (var i = 0; i < WZT.Data.Floors; i++)
             WZT.Loc.Json['floorPoints'][i] = new Array()
     }
 
-    function drawLine(A_X, A_Y, B_X, B_Y, dom) {
+    function drawLine(A_X, A_Y, B_X, B_Y, dom, d3) {
+        if (d3) {
+            var height = 250
+            var domName = '<div class="Floor_line" style="top:' + (A_Y + 25-height)  + 'px;left:' +( A_X + 25 )+ 'px;height:' + height + 'px;transform:rotateX(90deg);transform-origin:bottom"></div>'
+            $(dom).append(domName);
+            return;
+        }
         var add = 0;
         var sub = 1;
         if (A_Y > B_Y) {
@@ -477,5 +487,179 @@ jQuery(document).ready(function($) {
                 //called when there is an error
             }
         });
+    }
+
+    setTimeout(function() {
+    }, 1000)
+
+    function drawLoc(array) {
+        $.each(array, function(name, value) {
+            console.log(value)
+        });
+        for (var i = 0; i < array.length - 1; i++) {
+            //楼梯情况
+            var domName = $('#loc-' + array[i]['floor'])
+            console.log(domName)
+            if (array[i]['floor'] != array[i + 1]['floor']) {
+                if (array[i]['floor'] > array[i + 1]['floor']) {
+                    domName = $('#loc-' + array[i + 1]['floor'])
+                    drawLine(parseFloat(array[i]['X']), parseFloat(array[i]['Y']), 0, 0, domName, 1);
+                } else if (array[i]['floor'] < array[i + 1]['floor']) {
+                    drawLine(parseFloat(array[i]['X']), parseFloat(array[i]['Y']), 0, 0, domName, 1);
+                }
+            } else {
+                var domName = $('#loc-' + array[i]['floor'])
+                drawLine(parseFloat(array[i]['X']), parseFloat(array[i]['Y']), parseFloat(array[i + 1]['X']), parseFloat(array[i + 1]['Y']), domName);
+            }
+            $(".Floor_line").each(function() {
+                $(this).animate({ 'top': parseFloat($(this).css('top')) * WZT.topChange + 'px', 'left': parseFloat($(this).css('left')) * WZT.widthChange + 'px', 'height': parseFloat($(this).css('height')) * WZT.topChange + 'px', 'width': parseFloat($(this).css('width')) * WZT.widthChange + 'px' });
+            });
+            //普通情况
+        }
+
+
+        $('.cd-start').animate({ 'opacity': '0.6' })
+    }
+
+
+    function locFun(x, y, f) {
+        var FilePath = './loc/' + WZT.Data.B_ID + '.json';
+        // var FilePath = '52.json'
+        //初始化部分----------------------
+        var all = new Array();
+        var arc_lines = new Array(); //保存弧段 from,to,Weight
+        var arc_nodes = new Array(); //保存节点 X,Y,f值,父节点
+        var node_arcs = new Array(); //每个节点对应的弧段编号 
+        var dist = new Array(); //最短距离以及初始化
+        var openList = new Array(); //打开列表
+        var closeList = new Array(); //关闭列表
+
+        $.getJSON(FilePath, function(result) {
+            //数据读取与储存部分-------------------------------------------------------节点
+            for (var i = 0; i < result['points'].length; i++) {
+                node_arcs[i] = new Array(); //预先创建节点对应弧段列表的第二维
+                var tempArray = new Array();
+                tempArray.push(parseFloat(result['points'][i]['X'], 10)); //X
+                tempArray.push(parseFloat(result['points'][i]['Y'], 10)); //Y
+                tempArray.push(0); //保存每个点的g值
+                tempArray.push(-1); //保存父节点
+                tempArray.push(0); //暂存每个节点的f值
+                arc_nodes.push(tempArray);
+            }
+            //边数据读取
+            for (var i = 0; i < result['edges'].length; i++) {
+                var tempArray = new Array();
+                tempArray.push(parseInt(result['edges'][i]["A"], 10));
+                tempArray.push(parseInt(result['edges'][i]["B"], 10));
+                tempArray.push(parseFloat(result['edges'][i]["Weight"], 10));
+                arc_lines.push(tempArray);
+                node_arcs[tempArray[0]].push(i);
+                node_arcs[tempArray[1]].push(i);
+            }
+            console.log(result)
+                //获取最近的一个点
+            var judge = 99999999;
+            var pt;
+            for (var i = 0; i < result['floorPoints'][f].length; i++) {
+                var number = result['floorPoints'][f][i];
+                var point = result['points'][number];
+                var length = Math.sqrt((point['X'] - x) * (point['X'] - x) + (point['Y'] - y) * (point['Y'] - y));
+                if (length < judge) {
+                    judge = length;
+                    pt = number;
+                }
+            }
+            b = parseInt(pt);
+            //---------------
+            var a = parseInt(result['enter'][0])
+            Astar(a, b);
+            var array = new Array();
+            var path = b;
+            for (var i = 0; i < arc_nodes.length; i++) {
+                console.log(path)
+                var floor;
+                $.each(result['floorPoints'], function(name, value) {
+                    $.each(value, function(name2, value) {
+                        if (value == path) {
+                            floor = name;
+                        }
+                    })
+                })
+                var newp = {
+                    'X': result['points'][path]['X'],
+                    'Y': result['points'][path]['Y'],
+                    'path': path,
+                    'floor': floor
+                }
+                array.push(newp)
+                path = arc_nodes[path][3]
+                if (path == a) {
+                    var newp = {
+                        'X': result['points'][path]['X'],
+                        'Y': result['points'][path]['Y'],
+                        'path': path,
+                        'floor': floor
+                    }
+                    console.log(path)
+                    array.push(newp)
+                    break;
+                }
+            }
+            drawLoc(array);
+        });
+
+        //算法部分---------------------------------------------------------
+        // var f = new Array; //f=g+h
+        function Astar(start, end) {
+            //计算起始点和终止点的位置
+            var startPoint = {
+                x: arc_nodes[start][0],
+                y: arc_nodes[start][1]
+            }
+            var endPoint = {
+                x: arc_nodes[end][0],
+                y: arc_nodes[end][1]
+            }
+            openList.push(start); //第一步先将起始点加入open表中
+            while (openList.length > 0) {
+                //取出与该点连接的所有线
+                var father = openList.shift(); //取出OPEN列表中的第一个，open列表一直保持有序
+                closeList.push(father); //添加到关闭列表中
+                outerloop:
+                    for (var i = 0; i < node_arcs[father].length; i++) {
+                        var toNode = 0;
+                        //找到相邻的对面的点id
+                        if (father == arc_lines[node_arcs[father][i]][0]) {
+                            toNode = arc_lines[node_arcs[father][i]][1];
+                        } else {
+                            toNode = arc_lines[node_arcs[father][i]][0];
+                        }
+                        //判断相邻的点不是在close列表中，若是则略过
+                        for (var j = 0; j < closeList.length; j++) {
+                            if (closeList[j] == toNode) continue outerloop; //跳出 TODO
+                        }
+                        //计算估计函数部分
+                        // var h = Math.abs(parseFloat(endPoint.x) - parseFloat(arc_nodes[toNode][0])) + Math.abs(parseFloat(endPoint.y) - parseFloat(arc_nodes[toNode][1]));
+                        var g = parseFloat(arc_nodes[father][2]) + parseFloat(arc_lines[node_arcs[father][i]][2]); //求出从起始点到该点的g值
+                        var f = g;
+                        //替换与更新
+                        if (arc_nodes[toNode][4] > f) { //已经被访问过，且新的路线比原来更短
+                            arc_nodes[toNode][2] = g; //更新g值
+                            arc_nodes[toNode][4] = f;
+                            arc_nodes[toNode][3] = father; //更新父节点
+                        } else if (arc_nodes[toNode][2] == 0) { //没有被访问过，则添加到open列表中
+                            arc_nodes[toNode][2] = g; //更新g值
+                            arc_nodes[toNode][4] = f;
+                            arc_nodes[toNode][3] = father; //更新父节点
+                            openList.push(toNode);
+                        }
+                    }
+                openList.sort(function(a, b) {
+                    return arc_nodes[a][4] - arc_nodes[b][4];
+                }); //排序
+
+                if (father == end) break;
+            }
+        }
     }
 });
