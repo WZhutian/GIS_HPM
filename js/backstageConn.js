@@ -465,3 +465,25 @@ function readfile(data) {
          }
      });
  }
+  /*
+j将前台修改的room里面的facility数据更新到数据库
+ */
+function modRoomFacility(data) {
+     var url = './php/modRoomFacility.php';
+     jQuery.ajax({
+         url: url,
+         data: data,
+         type: 'POST',
+         // dataType: 'json',
+         complete: function(xhr, textStatus) {
+             //called when complete
+         },
+         success: function(data, textStatus, xhr) {
+             //called when successful
+             console.log(data);
+         },
+         error: function(xhr, textStatus, errorThrown) {
+             //called when there is an error
+         }
+     });
+ }
