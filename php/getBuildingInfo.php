@@ -41,6 +41,8 @@ while ($row=mysql_fetch_array($result2)) {
           }
           $New_arr["facility"]=$facility_data;
 	$room_data[$row["R_ID"]]=$New_arr;
+	$New_facility_data=array();
+	$facility_data=$New_facility_data;
 }
 
 $data=array();
