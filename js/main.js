@@ -13,6 +13,7 @@ jQuery(document).ready(function($) {
     WZT.AllRecored = {}; //用来暂存临时变量
     WZT.Data.Floors = 0; //总楼层数
     WZT.Data.Facilitys = new Array(); //保存所有设备的数组
+    WZT.Data.AllFloors = new Array();
     WZT.Status = 0; //0为初始页面,1为进入界面
     /*
     第一部分：后台数据获取
@@ -49,7 +50,12 @@ jQuery(document).ready(function($) {
 
             //
             $(".room-legend").each(function() {
-                $(this).animate({ 'top': parseFloat($(this).css('top')) * WZT.topChange + 'px', 'left': parseFloat($(this).css('left')) * WZT.widthChange + 'px', 'height': 50 * WZT.topChange + 'px', 'width': 50 * WZT.widthChange + 'px' });
+                $(this).animate({
+                    'top': parseFloat($(this).css('top')) * WZT.topChange + 'px',
+                    'left': parseFloat($(this).css('left')) * WZT.widthChange + 'px',
+                    'height': 50 * WZT.topChange + 'px',
+                    'width': 50 * WZT.widthChange + 'px'
+                });
             });
         });
 
@@ -71,10 +77,12 @@ jQuery(document).ready(function($) {
 
     //楼层选择动画————————————————————————————————————————————————
     WZT.buildingChooseAni = function(event) {
+
         //获取点击的楼层号
         var idName = $(this).parent().attr("id");
         WZT.edit_Floor = idName[idName.length - 1];
         WZT.hideBuildingIcon(WZT.edit_Floor, WZT.Data.Floors);
+        showEchart();
         //修改事件绑定
         $('.cd-start').unbind();
         // event.preventDefault();
@@ -83,11 +91,15 @@ jQuery(document).ready(function($) {
         var domName = "#cd-floor-";
         WZT.AllRecored.BuildingSelectTop = parseInt($(this).parent().css('top'));
         var calculate = WZT.AllRecored.BuildingSelectTop - ((WZT.Data.Floors - 1) / 2 - WZT.edit_Floor) * (WZT.AllRecored.heightEvery - 800) - landuo[WZT.Data.Floors - 1];
-        $(domName + WZT.edit_Floor).animate({ top: calculate + "px" }, 400, function() {
+        $(domName + WZT.edit_Floor).animate({
+            top: calculate + "px"
+        }, 400, function() {
             //这段代码不要去动,转动
             var mq = window.getComputedStyle(document.querySelector('.cd-product-intro'), '::before').getPropertyValue('content');
             if (mq == 'mobile') {
-                $('body,html').animate({ 'scrollTop': $($(this).attr('href')).offset().top }, 200);
+                $('body,html').animate({
+                    'scrollTop': $($(this).attr('href')).offset().top
+                }, 200);
             } else {
                 $('.cd-product').addClass('is-product-tour').one('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', function() {
                     if (WZT.Status == 0) {
@@ -97,17 +109,30 @@ jQuery(document).ready(function($) {
                         // });
                         $('#legend-pannel').show(300);
                         $('#roomInfo-pannel').show(300);
-                        $(domName + WZT.edit_Floor + ' div:first').animate({ 'width': '440px', 'height': WZT.heightNew })
+                        $(domName + WZT.edit_Floor + ' div:first').animate({
+                            'width': '440px',
+                            'height': WZT.heightNew
+                        })
                         $(".cd-product-mockup").css({
                             'overflow-y': 'scroll',
                             'overflow-x': 'hidden'
                         });
                         //点位置变化函数
                         $(".room-legend").each(function() {
-                            $(this).animate({ 'top': parseFloat($(this).css('top')) / WZT.topChange + 'px', 'left': parseFloat($(this).css('left')) / WZT.widthChange + 'px', 'height': '50px', 'width': '50px' })
+                            $(this).animate({
+                                'top': parseFloat($(this).css('top')) / WZT.topChange + 'px',
+                                'left': parseFloat($(this).css('left')) / WZT.widthChange + 'px',
+                                'height': '50px',
+                                'width': '50px'
+                            })
                         });
                         $(".Floor_line").each(function() {
-                            $(this).animate({ 'top': parseFloat($(this).css('top')) / WZT.topChange + 'px', 'left': parseFloat($(this).css('left')) / WZT.widthChange + 'px', 'height': parseFloat($(this).css('height')) / WZT.topChange + 'px', 'width': parseFloat($(this).css('width')) / WZT.widthChange + 'px' });
+                            $(this).animate({
+                                'top': parseFloat($(this).css('top')) / WZT.topChange + 'px',
+                                'left': parseFloat($(this).css('left')) / WZT.widthChange + 'px',
+                                'height': parseFloat($(this).css('height')) / WZT.topChange + 'px',
+                                'width': parseFloat($(this).css('width')) / WZT.widthChange + 'px'
+                            });
                         });
                     }
                 });
@@ -124,7 +149,9 @@ jQuery(document).ready(function($) {
             WZT.Data.B_ID = 52;
             console.log("ULR中的楼ID:", WZT.Data.B_ID);
             //从后台获取数据，
-            var data = { "B_ID": WZT.Data.B_ID };
+            var data = {
+                "B_ID": WZT.Data.B_ID
+            };
             (function(data) {
                 var url = './php/getBuildingInfo.php';
                 jQuery.ajax({
@@ -145,15 +172,18 @@ jQuery(document).ready(function($) {
                         WZT.Data.Floors = 7;
                         WZT.Data.BaseMap = data1['building']['BaseMap'];
                         WZT.Data.B_Type = data1['building']["B_Type"];
+                        for (var i = 0; i < WZT.Data.Floors; i++) {
+                            WZT.Data.AllFloors[i] = new Array();
+                        }
                         //初始化
                         WZT.initBuilding();
                         $('.cd-start').on('click', WZT.buildingChooseAni); //绑定点击事件
                         //处理room节点
                         $.each(data1['room'], function(name, value) {
                             addNewLegendFromDB(value['X'], value['Y'], value['Floor'], name, value['L_ID']);
-                            WZT.Data.Facilitys[name] = value['facility'];
+                            WZT.Data.Facilitys[name] = value;
                             //TODO
-
+                            WZT.Data.AllFloors[value['Floor']].push(value['facility'])
                         });
                     },
                     error: function(xhr, textStatus, errorThrown) {
@@ -167,7 +197,10 @@ jQuery(document).ready(function($) {
 
     //返回楼层选择
     $('.cd-close-product-tour').on('click', function() {
-        $('.cd-start').animate({ 'width': WZT.widthNew, 'height': '800px' }, 100)
+        $('.cd-start').animate({
+            'width': WZT.widthNew,
+            'height': '800px'
+        }, 100)
         $('.cd-product').removeClass('is-product-tour');
         $('.cd-close-product-tour').removeClass('is-visible');
         // $('.cd-points-container').removeClass('points-enlarged points-pulsing');
@@ -175,7 +208,10 @@ jQuery(document).ready(function($) {
         WZT.showBuildingIcon(WZT.edit_Floor, WZT.Data.Floors);
         $('#legend-pannel').hide(400);
         $('#roomInfo-pannel').hide(400);
-        $(WZT.Area.lastDrag).css({ 'top': 0, "left": 0 });
+        $(WZT.Area.lastDrag).css({
+            'top': 0,
+            "left": 0
+        });
         $(".cd-start").parent().removeClass("showInArea");
         $(".cd-product-mockup").css({
             'overflow-y': '',
@@ -187,10 +223,20 @@ jQuery(document).ready(function($) {
             $('.cd-start').bind('click', WZT.buildingChooseAni);
         }, 800)
         $(".room-legend").each(function() {
-            $(this).animate({ 'top': parseFloat($(this).css('top')) * WZT.topChange + 'px', 'left': parseFloat($(this).css('left')) * WZT.widthChange + 'px', 'height': 50 * WZT.topChange + 'px', 'width': 50 * WZT.widthChange + 'px' });
+            $(this).animate({
+                'top': parseFloat($(this).css('top')) * WZT.topChange + 'px',
+                'left': parseFloat($(this).css('left')) * WZT.widthChange + 'px',
+                'height': 50 * WZT.topChange + 'px',
+                'width': 50 * WZT.widthChange + 'px'
+            });
         });
         $(".Floor_line").each(function() {
-            $(this).animate({ 'top': parseFloat($(this).css('top')) * WZT.topChange + 'px', 'left': parseFloat($(this).css('left')) * WZT.widthChange + 'px', 'height': parseFloat($(this).css('height')) * WZT.topChange + 'px', 'width': parseFloat($(this).css('width')) * WZT.widthChange + 'px' });
+            $(this).animate({
+                'top': parseFloat($(this).css('top')) * WZT.topChange + 'px',
+                'left': parseFloat($(this).css('left')) * WZT.widthChange + 'px',
+                'height': parseFloat($(this).css('height')) * WZT.topChange + 'px',
+                'width': parseFloat($(this).css('width')) * WZT.widthChange + 'px'
+            });
         });
     });
     //其他楼层动画
@@ -199,11 +245,15 @@ jQuery(document).ready(function($) {
         for (var i = 0; i < sum; i++) {
             if (i == num) {
                 setTimeout(function() {
-                    $(domName + num).animate({ top: WZT.AllRecored.BuildingSelectTop }, 200);
+                    $(domName + num).animate({
+                        top: WZT.AllRecored.BuildingSelectTop
+                    }, 200);
                 }, 600)
                 continue;
             }
-            $(domName + i).animate({ opacity: 1 }, 900, function() {});
+            $(domName + i).animate({
+                opacity: 1
+            }, 900, function() {});
         }
     }
     WZT.hideBuildingIcon = function(num, sum) {
@@ -212,7 +262,9 @@ jQuery(document).ready(function($) {
             if (i == num) {
                 continue;
             }
-            $(domName + i).animate({ opacity: 0 }, 300, function() {
+            $(domName + i).animate({
+                opacity: 0
+            }, 300, function() {
                 $(this).css('visibility', 'hidden');
             });
         }
@@ -265,7 +317,10 @@ jQuery(document).ready(function($) {
     WZT.Area.bindMethod = function(domName) {
         $(domName).on('dragStart', function(event, pointer) {
             if (WZT.Area.status == 2 && WZT.Area.lastDrag != this) {
-                $(WZT.Area.lastDrag).css({ 'top': 0, "left": 0 });
+                $(WZT.Area.lastDrag).css({
+                    'top': 0,
+                    "left": 0
+                });
             }
             WZT.Area.lastDrag = this;
             WZT.Area.status = 1;
@@ -302,10 +357,16 @@ jQuery(document).ready(function($) {
             var dom = this;
             $(".cd-start").parent().removeClass("showInArea");
             if (WZT.Area.lastDrag != this) {
-                $(WZT.Area.lastDrag).css({ 'top': 0, "left": 0 });
+                $(WZT.Area.lastDrag).css({
+                    'top': 0,
+                    "left": 0
+                });
             } else if (WZT.Area.status == 2) {
                 addNewLegend(this); //在楼层图片上添加新的图例
-                $(this).css({ 'top': 0, "left": 0 });
+                $(this).css({
+                    'top': 0,
+                    "left": 0
+                });
                 WZT.Area.status = 3;
             }
         })
@@ -354,6 +415,7 @@ jQuery(document).ready(function($) {
                     if (data == 0)
                         alert('添加失败，网络问题')
                     dom[0].setAttribute('data-r_id', data);
+                    WZT.Data.Facilitys[data]['facility'] = new Array();
                 },
                 error: function(xhr, textStatus, errorThrown) {
                     //called when there is an error
@@ -379,14 +441,6 @@ jQuery(document).ready(function($) {
 
 
 
-
-
-
-
-
-
-
-
     //房间点选择，弹框
     $('.cd-single-point').children('a').on('click', function() {
         var selectedPoint = $(this).parent('li');
@@ -400,6 +454,9 @@ jQuery(document).ready(function($) {
 
 
 
+    $("#wm_close").click(function() {
+        $("#floorInfo-pannel").hide();
+    });
 
 
 
@@ -409,15 +466,284 @@ jQuery(document).ready(function($) {
     //         $('body').append(domName)
     //     }
     // WZT.Location.addLine(1, 15, 20);
-
+    // WZT.edit_Floor = 0;
     function legendClick() {
+        $('#content').html('')
+
         var R_ID = $(this).data('r_id');
         console.log(R_ID)
+        console.log(WZT.Data.Facilitys)
+        var data={
+             "Facility": []
+        }
+        $.each(WZT.Data.Facilitys[R_ID]['facility'], function(name, value) {
+            var jsonData= {"F_ID":name, "F_Name":value['F_Name'], "F_Num":value['F_Num']};
+             data['Facility'].push(jsonData);   
+                // console.log(value['F_Name'])
+                // console.log(name)
+        })
+        console.log(data)
+        $("#floorInfo-pannel").show();
+        wm_json(data,'123123')
+        // wm_json()
+    }
+    // Data.Facilitys 
+    // WZT.Data.Facilitys
+
+    //   $( WZT.Data.Facilitys).each(function(){
+    // if(WZT.Data.Facilitys==WZT.edit_Floor){
+    // console.log(WZT.Data.Facilitys)
+    // }
+    //   });
+
+
+    function showEchart() {
+        var data = {
+            'categories': [],
+            'data': []
+        };
+        $.each(WZT.Data.AllFloors[WZT.edit_Floor], function(name, value) {
+            var F_ID = name;
+            for (var k in value) {
+                data['categories'].push(value[k]['F_Name'])
+                data['data'].push(value[k]['F_Num'])
+            }
+        })
+        wm_change(data, 'aa');
+    }
+});
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+$('#roomInfo-pannel').css('display', '')
+
+
+var dom = document.getElementById("container");
+var myChart = echarts.init(dom);
+var app = {};
+option = null;
+var data = {
+    categories: ["投影仪", "电脑", "办公桌", "消防栓", "空调", "风扇"],
+    data: [5, 20, 36, 10, 10, 20]
+}
+
+
+
+// 初始 option
+option = {
+    title: {
+        text: '设施数量直方图'
+    },
+    tooltip: {},
+    legend: {
+        data: ['设施数量']
+    },
+    xAxis: {
+        data: []
+    },
+    yAxis: {},
+    series: [{
+        name: '设施数量',
+        type: 'bar',
+        data: []
+    }]
+};
+//json数据格式如下  上下呈一一对应关系 上面表示设施名字下面是数量
+// var data ={
+//     categories: ["投影仪","电脑","办公桌","消防栓","空调","风扇"],
+//     data: [5, 20, 36, 10, 10, 20]
+// }
+//使用wm_change()函数来动态修改图标的值 只需将以上格式的json数据带入即可
+// info是显示楼层信息是个字符串
+myChart.setOption(option, true);
+var aa = "haha";
+wm_change(data, aa);
+
+function wm_change(data, info) {
+    document.getElementById("wm_inp").value = info;
+    console.log(data)
+    myChart.setOption({
+        xAxis: {
+            data: data.categories
+        },
+        series: [{
+            // 根据名字对应到相应的系列
+            name: '设施数量',
+            data: data.data
+        }]
+    });
+};
+$('#roomInfo-pannel').css('display', 'none')
+
+
+var currentStep = 0;
+var max_line_num = 0;
+//添加新记录
+function add_line() {
+    max_line_num = $("#content tr:last-child").children("td").html();
+    if (max_line_num == null) {
+        max_line_num = 1;
+    } else {
+        max_line_num = parseInt(max_line_num);
+        max_line_num += 1;
+    }
+    $('#content').append(
+        "<tr id='line" + max_line_num + "'>" +
+        "<td class='td_Num'>" + max_line_num + "</td>" +
+        "<td class='td_Item'><input type='text'  style='width:70px' class='stepName' value='设备名称 " + max_line_num + "'></input></td>" +
+        "<td class='td_Item'><input type='text' style='width:70px'  class='stepDescription' value='设备数量" + max_line_num + "'></td>" +
+        "<td class='td_Oper'>" +
+        "<span onclick='remove_line(this);'>删除</span> " +
+        "</td>" +
+        "</tr>");
+}
+//删除选择记录
+
+
+// 使用 wm_json()函数来动能动态修改表格内容 
+// wm_test是JSON格式数据 格式如下 inf是用来显示房间名信息是个字符串
+
+//  var wm_test= { "Facility": [
+
+// { "F_Name": "电脑", "F_Num":"20"},
+
+// { "F_Name": "投影仪", "F_Num":"10"},
+
+// { "F_Name": "桌子", "F_Num":"50"}
+
+// ]}
+
+function wm_json(wm_test, inf) {
+
+    for (var i = 0; i < wm_test['Facility'].length; i++) {
+        max_line_num = $("#content tr:last-child").children("td").html();
+        if (max_line_num == null) {
+            max_line_num = 1;
+        } else {
+            max_line_num = parseInt(max_line_num);
+            max_line_num += 1;
+        }
+        $('#content').append(
+            "<tr id='line" + max_line_num + "'>" +
+            "<td class='td_Num'>" + wm_test['Facility'][i]['F_ID'] + "</td>" +
+            "<td class='td_Item'><input type='text'  style='width:70px' class='stepName' value=" + wm_test['Facility'][i]['F_Name'] + "></input></td>" +
+            "<td class='td_Item'><input type='text' style='width:70px'  class='stepDescription' value=" + wm_test['Facility'][i]['F_Num'] + "></td>" +
+            "<td class='td_Oper'>" +
+            "<span onclick='remove_line(this);'>删除</span> " +
+            "</td>" +
+            "</tr>");
     }
 
+    document.getElementById("wm_inp2").value = inf;
 
 
+}
 
+function remove_line(index) {
+    if (index != null) {
+        currentStep = $(index).parent().parent().find("td:first-child").html();
+    }
+    if (currentStep == 0) {
+        alert('请选择一项!');
+        return false;
+    }
+    if (confirm("确定要删除改记录吗？")) {
+        $("#content tr").each(function() {
+            var seq = parseInt($(this).children("td").html());
+            if (seq == currentStep) {
+                $(this).remove();
+            }
+            if (seq > currentStep) {
+                $(this).children("td").each(function(i) {
+                    if (i == 0) $(this).html(seq - 1);
+                });
+            }
+        });
+    }
+}
+//上移
+function up_exchange_line(index) {
+    if (index != null) {
+        currentStep = $(index).parent().parent().find("td:first-child").html();
+    }
+    if (currentStep == 0) {
+        alert('请选择一项!');
+        return false;
+    }
+    if (currentStep <= 1) {
+        alert('已经是最顶项了!');
+        return false;
+    }
+    var upStep = currentStep - 1;
+    //修改序号
+    $('#line' + upStep + " td:first-child").html(currentStep);
+    $('#line' + currentStep + " td:first-child").html(upStep);
+    //取得两行的内容
+    var upContent = $('#line' + upStep).html();
+    var currentContent = $('#line' + currentStep).html();
+    $('#line' + upStep).html(currentContent);
+    //交换当前行与上一行内容
+    $('#line' + currentStep).html(upContent);
+    $('#content tr').each(function() {
+        $(this).css("background-color", "#ffffff");
+    });
+    $('#line' + upStep).css("background-color", "yellow");
+    event.stopPropagation(); //阻止事件冒泡
+}
+//下移
+function down_exchange_line(index) {
+    if (index != null) {
+        currentStep = $(index).parent().parent().find("td:first-child").html();
+    }
+    if (currentStep == 0) {
+        alert('请选择一项!');
+        return false;
+    }
+    if (currentStep >= max_line_num) {
+        alert('已经是最后一项了!');
+        return false;
+    }
+    var nextStep = parseInt(currentStep) + 1;
+    //修改序号
+    $('#line' + nextStep + " td:first-child").html(currentStep);
+    $('#line' + currentStep + " td:first-child").html(nextStep);
+    //取得两行的内容
+    var nextContent = $('#line' + nextStep).html();
+    var currentContent = $('#line' + currentStep).html();
+    //交换当前行与上一行内容
+    $('#line' + nextStep).html(currentContent);
+    $('#line' + currentStep).html(nextContent);
+    $('#content tr').each(function() {
+        $(this).css("background-color", "#ffffff");
+    });
+    $('#line' + nextStep).css("background-color", "yellow");
+    event.stopPropagation(); //阻止事件冒泡
+}
+//保存数据
+// 这里会以一下格式发送到后台
+//  var wm_test= { "Facility": [
 
+// { "F_Name": "电脑", "F_Num":"20"},
 
-});
+// { "F_Name": "投影仪", "F_Num":"10"},
+
+// { "F_Name": "桌子", "F_Num":"50"}
+
+// ]}
+function SaveData() {
+    var data = {}
+    data['Facility'] = new Array()
+    $('#content tr').each(function() {
+        var F_ID = $(this).find("td:eq(0)").html();
+        var stepName = $(this).find("td:eq(1)").find("input").val();
+        var stepDescription = $(this).find("td:eq(2)").find("input").val();
+        data['Facility'].push({
+                 'F_ID':F_ID,
+                'F_Name': stepName,
+                'F_Num': stepDescription
+            })
+            // data += stepDescription;
+    });
+    console.log(data)
+    // addFacility(data);
+    // console.log(data);
+}

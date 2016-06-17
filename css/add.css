@@ -29,7 +29,19 @@
     display: none;
     border-radius: 20px;
 }
-
+#floorInfo-pannel{
+    overflow-x:hidden; 
+    text-align: center;
+    position: fixed;
+    display: none;
+    top: 9%;
+    right: 5%;
+    background-color: gray;
+    width: 30%;
+    height: 800px;
+    border-radius: 20px;
+    position: absolute;
+}
 #roomInfo-pannel {
     text-align: center;
     position: fixed;
@@ -38,7 +50,6 @@
     background-color: gray;
     width: 30%;
     height: 800px;
-    display: none;
     border-radius: 20px;
 }
 
