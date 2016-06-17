@@ -11,8 +11,16 @@
   <script src="assets/js/jquery-1.12.0.min.js"></script>
   <script src="assets/js/tspant.js"></script>
   <!-- <script src="http://openlayers.org/en/v3.16.0/build/ol.js"></script> -->
+  <!-- 右下角工具 -->
+<link rel="stylesheet" type="text/css" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" type="text/css" href="font/titillium/stylesheet.css">
+<link rel='stylesheet prefetch' href='css/animate.min.css'>
+<link rel="stylesheet" type="text/css" href="css/spindefault.css">
+<link rel="stylesheet" type="text/css" href="css/stylespage1.css">
+
+
+<!-- 主界面css -->
+<link rel="stylesheet" type="text/css" href="font/titillium/stylesheet.css">
 <link rel="stylesheet" type="text/css" href="font/exo-demibold/stylesheet.css">
 <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
 <link rel="stylesheet" type="text/css" href="css/resetpage1.css">
@@ -25,8 +33,38 @@
 
 <script type="text/javascript" src="js/modernizr.custom.29473.js"></script>
 <script type="text/javascript" src="js/dropdown.js"></script>
-
+ <!-- 打印地图 -->
+  <script type="text/javascript" src="js/FileSaver.js"></script>
+  <script type="text/javascript" src="js/canvas-toBlob.js"></script>
   <title>路径规划</title>
+  <style type="text/css">
+    #outText
+    {
+      position:fixed;
+      right:200px; 
+      bottom:20px; 
+
+      width: 450px;
+    height: 240px;
+    margin: 50px;
+    background-color: #f0f3f9;
+    /*position:relative;*/
+    z-index: 999;
+    /*设置边框蓝光*/
+    -moz-box-shadow:0 0 25px #697cf5;
+    -webkit-box-shadow:0 0 25px #697cf5;
+    box-shadow:0 0 25px #8cb9f5;
+    /*绿光*/
+   /* -moz-box-shadow:0 0 25px #2aaa8a;
+    -webkit-box-shadow:0 0 25px #2aaa8a;
+    box-shadow:0 0 25px #2aaa8a;*/
+
+    /*设置圆角*/
+    -moz-border-radius: 15px;      /* Gecko browsers */
+    -webkit-border-radius: 15px;   /* Webkit browsers */
+    border-radius:15px;            /* W3C syntax */
+    }
+  </style>
 </head>
 <body>
 <ul class="nav" style="position:fixed;">
@@ -47,15 +85,8 @@
   
   <!-- Start Portfolio -->
   <li>
-    <div id="cover1"><a href="#">报修管理<i class="icon-chevron-down"></i></a></div>
+    <div id="cover1"><a href="clustertest.html">报修管理<i class="icon-chevron-down"></i></a></div>
     <div id="icon"><i class="icon-briefcase" ></i></div>
-    <ul class="one" id="menu">
-      <li><a href="clustertest.html" >查看报修信息</a></li>
-      <li><a href="#">导出报修信息</a></li>
-      <li><a href="#">图表分析</a></li>
-      <li><a href="#">修理工管理</a></li>
-    
-    </ul>
   </li>
   
   <!-- Start Services -->
@@ -97,9 +128,7 @@
         <input name="email" type="text" id="email">
         <p>描述<em>*</em></p>
         <textarea name="comment" cols="" rows="" id="comment"></textarea>
-        <input name="send" type="button" id="send" value="提交">
-        <input name="send" type="button" id="send" value="查看全部">
-        <input name="send" type="button" id="send" value="区域查询">
+        <p>请在地图上添加物品丢失的位置<em>*</em></p>
       </li>
     </ul>
   </li>
@@ -111,15 +140,64 @@
   </li>
   
 </ul>
-  <div id="map" class="map"  style="width:100%;height:80%"></div>
-  <button id="drawtoggle" data-toggle="false" type="button">添加点</button>
+  <div id="map" class="map"  style="width:100%;height:100%"></div>
+  <div id="outText" style="display:none">
+      <a href="#" style="right:10px;top:10px;">×</a>
+  </div>
 
-  <button id="TSPAnt"  type="button">求解最佳路径</button>
 
-  <button id="Clear"  type="button">清空</button>
-  <!-- <a href="index.html">返回主页</a> -->
+    <!-- 右下角工具栏 -->
+<div class="htmleaf-container">
+  <div id='ss_menu'>
+    <div>
 
-  <div id="outText"></div>
+    <i class="fa fa-pencil"  id="drawtoggle" data-toggle="false"><a id="export-png" class="btn btn-default" download="map.png"></a></i>
+    </div>
+    <div>
+    <i class="fa fa-flash" id="resultbastpath" onclick="resultbastpathfun()" data-toggle="false"></i>
+    </div>
+    <div>
+    <i class="fa fa-trash-o" id="clearpath" onclick="clearpathfun()" data-toggle="false"></i>
+    </div>
+    <div>
+    <i class="fa fa-print" id="printpathmap" onclick="printpathmapfun()"></i>
+    </div>
+    <div class='menu'>
+    <div class='share ' id='ss_toggle' data-rot='180'>
+      <div class='circle'></div>
+      <div class='bar'></div>
+    </div>
+    </div>
+  </div>
+</div>
+<script>
+//右下角旋转菜单
+$(document).ready(function (ev) {
+  var toggle = $('#ss_toggle');
+  var menu = $('#ss_menu');
+  var rot;
+  $('#ss_toggle').on('click', function (ev) {
+    rot = parseInt($(this).data('rot')) - 180;
+    menu.css('transform', 'rotate(' + rot + 'deg)');
+    menu.css('webkitTransform', 'rotate(' + rot + 'deg)');
+    if (rot / 180 % 2 == 0) {
+      toggle.parent().addClass('ss_active');
+      toggle.addClass('close');
+    } else {
+      toggle.parent().removeClass('ss_active');
+      toggle.removeClass('close');
+    }
+    $(this).data('rot', rot);
+  });
+  menu.on('transitionend webkitTransitionEnd oTransitionEnd', function () {
+    if (rot / 180 % 2 == 0) {
+      $('#ss_menu div i').addClass('ss_animate');
+    } else {
+      $('#ss_menu div i').removeClass('ss_animate');
+    }
+  });
+});
+</script>
   <script type="text/javascript">
 
       // Style
@@ -137,11 +215,22 @@
         })
       ];
 
+//设置点的图标
+
+var iconStyle = new ol.style.Style({
+  image: new ol.style.Icon(({
+    src: 'data/icon/point.png'
+    // src: 'data/icon/marker2.png'
+  }))
+});
+
+
+console.log(iconStyle);
       // 申明一个用来存放点的资源
       var vectorSourcePoints = new ol.source.GeoJSON();
       var vectorLayerPoints = new ol.layer.Vector({
         source: vectorSourcePoints,
-        style: defaultStyle
+        style: iconStyle
       });
 
       // Declare a source for drawing
@@ -195,11 +284,11 @@
       var myPoints;
 
       // fetchJSON('assets/data/key_shop_with_name_nantes_area.geojson')
+      // fetchJSON('data/json/losteventgeojson.geojson')
       fetchJSON('assets/data/pointtest2.geojson')
 
         .then(function(points_fc) {
         myPoints = points_fc;
-
         vectorSourcePoints.addFeatures(geojsonToFeatures(points_fc, {
           featureProjection: 'EPSG:3857'
         }));
@@ -247,18 +336,23 @@
           map.addInteraction(draw);
         }
       };
-
-      // TSP问题算法
-      var button4 = document.getElementById('Clear');
-      button4.onclick = function(e) {
+function printpathmapfun()
+{
+   console.log("保存地图");
+    canvas = document.getElementsByTagName('canvas')[0];
+    canvas.toBlob(function (blob) {
+      saveAs(blob, 'map.png');
+    })
+}
+function clearpathfun()
+{
       clear();
-      }
-      var button5 = document.getElementById('TSPAnt');
-      button5.onclick = function(e) {
-        //调用tspant.js中定义的函数
-        initAllMats();
-        ACA_TSP();
-      }
+}
+function resultbastpathfun()
+{
+  initAllMats();
+  ACA_TSP();
+}
     </script>
 </body>
 </html>

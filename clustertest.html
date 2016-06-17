@@ -4,6 +4,13 @@
     <title>报修管理</title>
     <link rel="stylesheet" href="http://openlayers.org/en/v3.16.0/css/ol.css" type="text/css">
     <script src="http://openlayers.org/en/v3.16.0/build/ol.js"></script>
+
+
+<!-- 新添加的工具库 -->
+    <script src="assets/js/helpers.js"></script>
+    <script type="text/javascript" src="js/echarts.js"></script>
+
+
      <link rel="stylesheet" type="text/css" href="font/titillium/stylesheet.css">
 <link rel="stylesheet" type="text/css" href="font/exo-demibold/stylesheet.css">
 <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
@@ -19,6 +26,76 @@
 <script type="text/javascript" src="js/modernizr.custom.29473.js"></script>
 <script type="text/javascript" src="js/dropdown.js"></script>
     <style>
+           table{
+          border:solid;
+          border-color:#6E9AEA;
+              position: relative;
+              top:20px;
+              left:20px;
+              }
+         tr td,th{
+            /*border:solid #6E9AEA;*/
+            width: 70px;
+            height: 25px;
+         }
+        .td_Num
+        {
+            width: 40px;
+            text-align: center;
+        }
+        .td_Item
+        {
+            width: 75px;
+            text-align: center;
+        }
+        .td_Oper
+        {
+            width: 190px;
+            text-align: center;
+        }
+        .td_Oper span
+        {
+            cursor: pointer;
+        }
+        .popstyle
+        {
+          /*overflow: auto;
+              position:fixed;
+              right:30px; 
+              top:60px; */
+              /*width: 450px;
+            height: 240px;*/
+            margin: 50px;
+            background-color: #f0f3f9;
+            /*position:relative;*/
+            z-index: 999;
+            /*设置边框蓝光*/
+            -moz-box-shadow:0 0 25px #697cf5;
+            -webkit-box-shadow:0 0 25px #697cf5;
+            box-shadow:0 0 25px #8cb9f5;
+            /*设置圆角*/
+            -moz-border-radius: 15px;      /* Gecko browsers */
+            -webkit-border-radius: 15px;   /* Webkit browsers */
+            border-radius:15px;            /* W3C syntax */
+        }
+#popdiv{
+              width: 450px;
+              height: 240px;
+              overflow: auto;
+              position:fixed;
+              right:30px; 
+              top:60px; 
+            background-color: #f0f3f9;
+}
+#popdivbar{
+            background-color: #f0f3f9;
+             width:450px;
+             height: 240px;
+             /*overflow: auto;*/
+             position:absolute;
+             right:30px; 
+             top:310px; 
+}
       #map {
         position: relative;
       }
@@ -58,15 +135,14 @@
   
   <!-- Start Portfolio -->
   <li>
-    <div id="cover1"><a href="#">报修管理<i class="icon-chevron-down"></i></a></div>
+    <div id="cover1"><a href="clustertest.html" >报修管理<i class="icon-chevron-down"></i></a></div>
     <div id="icon"><i class="icon-briefcase" ></i></div>
-    <ul class="one" id="menu">
+    <!-- <ul class="one" id="menu">
       <li><a href="clustertest.html" >查看报修信息</a></li>
       <li><a href="#">导出报修信息</a></li>
       <li><a href="#">图表分析</a></li>
       <li><a href="#">修理工管理</a></li>
-    
-    </ul>
+    </ul> -->
   </li>
   
   <!-- Start Services -->
@@ -120,9 +196,20 @@
     <input name="search" type="text" placeholder="Search" id="txt_search2">
     <a href="#"><i class="icon-search"></i></a> 
   </li>
-  
 </ul>
     <div id="map" class="map"></div>
+    <div id="popdiv" class="popstyle" style="display:none">
+    <table>
+        <tr>
+            <td class='td_Num'>序号</td>
+            <td class='td_Item'>地点</td>
+            <td class='td_Item'>联系方式</td>
+            <td class='td_Oper'>描述</td>
+        </tr>
+    </table>
+    <table id="content"></table>
+  </div>
+    <div id="popdivbar" class="popstyle" style="display:none"></div>
     <script>
       var earthquakeFill = new ol.style.Fill({
         // color: 'rgba(255, 153, 0, 0.8)'
@@ -235,6 +322,7 @@
         source: new ol.source.Cluster({
           distance: 40,
           source: new ol.source.Vector({
+            //用于图上显示的KML文件
             url: 'assets/data/pointclusterkml.kml',
             format: new ol.format.KML({
               extractStyles: false
@@ -243,13 +331,44 @@
         }),
         style: styleFunction
       });
+      //用于报表显示的json文件  vectorSource
+      var geojsonObject = {
+        "type": "FeatureCollection",
+        "features": [{
+            "type": "Feature",
+            "properties": {},
+            "geometry": {
+                "type": "Point",
+                "coordinates": [114.39778640000009, 30.522237200000063]
+            }
+        }]
+    };
+        var vectorSource = new ol.source.Vector({
+        features: (new ol.format.GeoJSON()).readFeatures(geojsonObject)
+    });
+      vectorSource.clear();
 
+        var vectorLayer = new ol.layer.Vector({//从数据中读出的点图层
+        source: vectorSource
+      });
+        // fetchJSON('assets/data/pointtest2.geojson')
+        fetchJSON('data/json/losteventgeojson.geojson')
+        .then(function(points_fc) {
+        newfeatures = points_fc;
+        // console.log(typeof(newfeatures));//对象形式
+        vectorSource.addFeatures(geojsonToFeatures(points_fc, {
+          featureProjection: 'EPSG:3857'
+        }));
+        console.log(newfeatures);
+        resultfun();
+        showbar();
+      });
      
       var openStreetMapLayer = new ol.layer.Tile({
         source:new ol.source.OSM()
     });
       var map = new ol.Map({
-        layers: [openStreetMapLayer, vector],
+        layers: [openStreetMapLayer, vector,vectorLayer],
         target: 'map',
         view: new ol.View({
           center: ol.proj.transform(
@@ -260,6 +379,176 @@
           zoom: 15
         })
       });
+
+//弹出表格**********************************************************************
+    var currentStep = 0;
+    var max_line_num = 0;
+    //添加新记录
+    function add_line(el) {
+        max_line_num = $("#content tr:last-child").children("td").html();
+        if (max_line_num == null) {
+            max_line_num = 1;
+        }
+        else {
+            max_line_num = parseInt(max_line_num);
+            max_line_num += 1;
+        }
+        $('#content').append(
+        "<tr id='line" + max_line_num + "'>" +
+            "<td class='td_Num'>" + max_line_num + "</td>" +
+            "<td class='td_Item'><input type='text'  style='width:70px' class='stepName' value='" + el.U.location + "'></input></td>" +
+            "<td class='td_Item'><input type='text' style='width:70px'  class='stepDescription' value='" + el.U.contactway + "'></td>" +
+            "<td class='td_Oper'><input type='text' style='width:170px'  class='stepDescription' value='" + el.U.event + "'></td>" +
+            // "<td class='td_Oper'>" +            "</td>" +
+        "</tr>");
+    }
+    //删除选择记录
+    function clearcontent()
+    {
+      $("#content tr").each(function () {
+                $(this).remove(); 
+            });
+      max_line_num=0;
+    }
+    function remove_line(index) {
+        if (index != null) {
+            currentStep = $(index).parent().parent().find("td:first-child").html();
+        }
+        if (currentStep == 0) {
+            alert('请选择一项!');
+            return false;
+        }
+        if (confirm("确定要删除改记录吗？")) {
+            $("#content tr").each(function () {
+                var seq = parseInt($(this).children("td").html());
+                if (seq == currentStep) { $(this).remove(); }
+                if (seq > currentStep) { $(this).children("td").each(function (i) { if (i == 0) $(this).html(seq - 1); }); }
+            });
+        }
+    }
+    //上移
+    function up_exchange_line(index) {
+        if (index != null) {
+            currentStep = $(index).parent().parent().find("td:first-child").html();
+        }
+        if (currentStep == 0) {
+            alert('请选择一项!');
+            return false;
+        }
+        if (currentStep <= 1) {
+            alert('已经是最顶项了!');
+            return false;
+        }
+        var upStep = currentStep - 1;
+        //修改序号
+        $('#line' + upStep + " td:first-child").html(currentStep);
+        $('#line' + currentStep + " td:first-child").html(upStep);
+        //取得两行的内容
+        var upContent = $('#line' + upStep).html();
+        var currentContent = $('#line' + currentStep).html();
+        $('#line' + upStep).html(currentContent);
+        //交换当前行与上一行内容
+        $('#line' + currentStep).html(upContent);
+        $('#content tr').each(function () { $(this).css("background-color", "#ffffff"); });
+        $('#line' + upStep).css("background-color", "yellow");
+        event.stopPropagation(); //阻止事件冒泡
+    }
+    //下移
+    function down_exchange_line(index) {
+        if (index != null) {
+            currentStep = $(index).parent().parent().find("td:first-child").html();
+        }
+        if (currentStep == 0) {
+            alert('请选择一项!');
+            return false;
+        }
+        if (currentStep >= max_line_num) {
+            alert('已经是最后一项了!');
+            return false;
+        }
+        var nextStep = parseInt(currentStep) + 1;
+        //修改序号
+        $('#line' + nextStep + " td:first-child").html(currentStep);
+        $('#line' + currentStep + " td:first-child").html(nextStep);
+        //取得两行的内容
+        var nextContent = $('#line' + nextStep).html();
+        var currentContent = $('#line' + currentStep).html();
+        //交换当前行与上一行内容
+        $('#line' + nextStep).html(currentContent);
+        $('#line' + currentStep).html(nextContent);
+        $('#content tr').each(function () { $(this).css("background-color", "#ffffff"); });
+        $('#line' + nextStep).css("background-color", "yellow");
+        event.stopPropagation(); //阻止事件冒泡
+    }
+    //保存数据
+    function SaveData() {
+        var data = "<root>";
+        $('#content tr').each(function () {
+            data += "<item>";
+            var stepName = $(this).find("td:eq(1)").find("input").val();
+            var stepDescription = $(this).find("td:eq(2)").find("input").val();
+            data += "   <stepName>" + stepName + "</stepName>";
+            data += "   <stepDescription>" + stepDescription + "</stepDescription>";
+            data += "<item>";
+        });
+        data += "</root>";
+        alert(data);
+    }
+function resultfun(){
+  console.log("查看全部报修数据");
+   vectorSource.getFeatures().forEach(function(el) {
+                  console.log(el);
+                  document.getElementById('popdiv').style.display = 'block';
+                  add_line(el);
+            });
+}
+function showbar()
+{
+  document.getElementById('popdivbar').style.display = 'block';
+   var dom = document.getElementById("popdivbar");
+                var myChart = echarts.init(dom);
+                var app = {};
+                option = null;
+                      var data ={
+                            categories: ["教三楼","公主楼","西区篮球场","52,53栋","教一楼","数理楼"],
+                            data: [15, 20, 3, 40, 10, 20]
+                        }
+                // 初始 option
+                option = {
+                    title: {
+                        text: '报修信息统计'
+                    },
+                    tooltip: {},
+                    legend: {
+                        data:['报修数量']
+                    },
+                    xAxis: {
+                        data: []
+                    },
+                    yAxis: {},
+                    series: [{
+                        name: '报修数量',
+                        type: 'bar',
+                        data: []
+                    }]
+                };
+                function a(data) {
+                console.log(data)
+                    myChart.setOption({
+                        xAxis: {
+                            data: data.categories
+                        },
+                        series: [{
+                            // 根据名字对应到相应的系列
+                            name: '报修数量',
+                            data: data.data
+                        }]
+                    });
+                };
+                myChart.setOption(option, true);
+                a(data);
+}
+
     </script>
   </body>
 </html>

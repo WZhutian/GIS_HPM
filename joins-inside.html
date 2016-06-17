@@ -6,6 +6,16 @@
     <script src='https://rawgit.com/Turfjs/turf/v2.0.2/turf.min.js'></script>
     <script src="assets/ol3/js/ol.js" type="text/javascript"></script>
     <script src="assets/js/helpers.js"></script>
+  <!-- 右下角工具 -->
+<link rel="stylesheet" type="text/css" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
+<link rel='stylesheet prefetch' href='css/animate.min.css'>
+<link rel="stylesheet" type="text/css" href="css/spindefault.css">
+<link rel="stylesheet" type="text/css" href="css/stylespage1.css">
+<script src="http://openlayers.org/en/v3.16.0/build/ol.js"></script>
+ <!-- 打印地图 -->
+  <script type="text/javascript" src="js/FileSaver.js"></script>
+  <script type="text/javascript" src="js/canvas-toBlob.js"></script>
+
     <title>失物招领</title>
          <link rel="stylesheet" type="text/css" href="font/titillium/stylesheet.css">
 <link rel="stylesheet" type="text/css" href="font/exo-demibold/stylesheet.css">
@@ -21,6 +31,60 @@
 
 <script type="text/javascript" src="js/modernizr.custom.29473.js"></script>
 <script type="text/javascript" src="js/dropdown.js"></script>
+<style type="text/css">
+        table{
+          border:solid;
+          border-color:#6E9AEA;
+              position: relative;
+              top:20px;
+              left:20px;
+              }
+         tr td,th{
+            /*border:solid #6E9AEA;*/
+            width: 70px;
+            height: 30px;
+         }
+        .td_Num
+        {
+            width: 40px;
+            text-align: center;
+        }
+        .td_Item
+        {
+            width: 75px;
+            text-align: center;
+        }
+        .td_Oper
+        {
+            width: 210px;
+            text-align: center;
+        }
+        .td_Oper span
+        {
+            cursor: pointer;
+        }
+        #popdiv
+        {
+          overflow: auto;
+              position:fixed;
+              right:30px; 
+              top:60px; 
+              width: 450px;
+            height: 240px;
+            margin: 50px;
+            background-color: #f0f3f9;
+            /*position:relative;*/
+            z-index: 999;
+            /*设置边框蓝光*/
+            -moz-box-shadow:0 0 25px #697cf5;
+            -webkit-box-shadow:0 0 25px #697cf5;
+            box-shadow:0 0 25px #8cb9f5;
+            /*设置圆角*/
+            -moz-border-radius: 15px;      /* Gecko browsers */
+            -webkit-border-radius: 15px;   /* Webkit browsers */
+            border-radius:15px;            /* W3C syntax */
+        }
+    </style>
   </head>
   <body>
   <ul class="nav" style="position:fixed;">
@@ -41,15 +105,8 @@
   
   <!-- Start Portfolio -->
   <li>
-    <div id="cover1"><a href="#">报修管理<i class="icon-chevron-down"></i></a></div>
+    <div id="cover1"><a href="clustertest.html">报修管理<i class="icon-chevron-down"></i></a></div>
     <div id="icon"><i class="icon-briefcase" ></i></div>
-    <ul class="one" id="menu">
-      <li><a href="clustertest.html" >查看报修信息</a></li>
-      <li><a href="#">导出报修信息</a></li>
-      <li><a href="#">图表分析</a></li>
-      <li><a href="#">修理工管理</a></li>
-    
-    </ul>
   </li>
   
   <!-- Start Services -->
@@ -86,14 +143,13 @@
     <ul class="one" id="contact">
       <li id="part-right">
         <p>地点<em>*</em></p>
-        <input name="name" type="text" id="name">
+        <input name="place" type="text" id="place">
         <p>联系方式<em>*</em></p>
-        <input name="email" type="text" id="email">
+        <input name="phonenumber" type="text" id="phonenumber">
         <p>描述<em>*</em></p>
-        <textarea name="comment" cols="" rows="" id="comment"></textarea>
-        <input name="send" type="button" id="send" value="提交">
-        <input name="send" type="button" id="send" value="查看全部">
-        <input name="send" type="button" id="send" value="区域查询">
+        <textarea name="describe" cols="" rows="" id="describe"></textarea>
+        <!-- <input name="send" type="button" id="send" value="提交"> -->
+        <p>请在地图上添加物品丢失的位置<em>*</em></p>
       </li>
     </ul>
   </li>
@@ -106,16 +162,111 @@
   
 </ul>
     <div id="map" class="map" style="width:100%;height:100%"></div>
-    <button id="drawtoggle" data-toggle="false" type="button">
+   <!--  <button id="drawtoggle" data-toggle="false" type="button">
       Activate/Desactivate drawing
-    </button>
+    </button> -->
+
+
+    <!-- 弹出表格 -->
+    <div id="popdiv" style="display:none">
+    <table>
+        <tr>
+            <td class='td_Num'>序号</td>
+            <td class='td_Item'>地点</td>
+            <td class='td_Item'>联系方式</td>
+            <td class='td_Oper'>描述</td>
+        </tr>
+    </table>
+    <table id="content"></table>
+  </div>
+
+
+
+      <!-- 右下角工具栏 -->
+<div class="htmleaf-container">
+  <div id='ss_menu'>
+    <div>
+
+    <i class="fa fa-pencil"  id="drawtoggle" data-toggle="false"><a id="export-png" class="btn btn-default" download="map.png"></a></i>
+    </div>
+    <div>
+    <i class="fa fa-eye" id="resultbastpath" onclick="resultfun()" data-toggle="false"></i>
+    </div>
+    <div>
+    <i class="fa fa-trash-o" id="clearpath" onclick="clearfun()" data-toggle="false"></i>
+    </div>
+    <div>
+    <i class="fa fa-plus-circle" id="drawpointtoggle"  datapoint-toggle="false"></i>
+    </div>
+    <div class='menu'>
+    <div class='share ' id='ss_toggle' data-rot='180'>
+      <div class='circle'></div>
+      <div class='bar'></div>
+    </div>
+    </div>
+  </div>
+</div>
+<script>
+//右下角旋转菜单
+$(document).ready(function (ev) {
+  var toggle = $('#ss_toggle');
+  var menu = $('#ss_menu');
+  var rot;
+  $('#ss_toggle').on('click', function (ev) {
+    rot = parseInt($(this).data('rot')) - 180;
+    menu.css('transform', 'rotate(' + rot + 'deg)');
+    menu.css('webkitTransform', 'rotate(' + rot + 'deg)');
+    if (rot / 180 % 2 == 0) {
+      toggle.parent().addClass('ss_active');
+      toggle.addClass('close');
+    } else {
+      toggle.parent().removeClass('ss_active');
+      toggle.removeClass('close');
+    }
+    $(this).data('rot', rot);
+  });
+  menu.on('transitionend webkitTransitionEnd oTransitionEnd', function () {
+    if (rot / 180 % 2 == 0) {
+      $('#ss_menu div i').addClass('ss_animate');
+    } else {
+      $('#ss_menu div i').removeClass('ss_animate');
+    }
+  });
+});
+</script>
     <script type="text/javascript">
 
-      // Declare a source for points and drawing
-      var vectorSource = new ol.source.GeoJSON();
-      var vectorSourceDrawing = new ol.source.GeoJSON();
+      // 申明一个资源保存原先的点和要绘制的面
+//***********************************************************************************
+var geojsonObject = {
+        "type": "FeatureCollection",
+        "features": [{
+            "type": "Feature",
+            "properties": {},
+            "geometry": {
+                "type": "Point",
+                "coordinates": [114.39778640000009, 30.522237200000063]
+            }
+        }]
+    };
+    var vectorSource = new ol.source.Vector({
+        features: (new ol.format.GeoJSON()).readFeatures(geojsonObject)
+    });
+     var vectorSourceDrawing = new ol.source.Vector({
+        features: (new ol.format.GeoJSON()).readFeatures(geojsonObject)
+    });
+      var vectorSourceDrawingPoint = new ol.source.Vector({
+        features: (new ol.format.GeoJSON()).readFeatures(geojsonObject)
+    });
+      vectorSource.clear();
+      vectorSourceDrawing.clear();
+      vectorSourceDrawingPoint.clear();
+//***********************************************************************************
+      //原先的
+      // var vectorSource = new ol.source.GeoJSON();
+      // var vectorSourceDrawing = new ol.source.GeoJSON();
 
-      // Create a style function for coloring points
+      // 设置选中区域点的样式
       var pointStyles = (function() {
         var defaultStyle = [
           new ol.style.Style({
@@ -141,23 +292,36 @@
             radius: 5
           })
         })];
+        var iconStyle = new ol.style.Style({
+          image: new ol.style.Icon(({
+            src: 'data/icon/marker2.png'
+          }))
+        });
         return function(feature, resolution) {
           var isInside = feature.get('isInside');
           if (isInside != undefined && isInside === true) {
             return ruleStyle;
           } else {
-            return defaultStyle;
+            return iconStyle;
+            // return defaultStyle;
           }
         };
       })();
+//设置点的图标
 
-      // Declare vector layers, one for points and the other for the drawing
-      var vectorLayer = new ol.layer.Vector({
+
+
+      // 申明矢量图层，一个点图层，一个线图层
+      var vectorLayer = new ol.layer.Vector({//从数据中读出的点图层
         source: vectorSource,
         style: pointStyles
+        // style: pointStyles
       });
-
-      var vectorLayerDrawing = new ol.layer.Vector({
+      var vectorPointAddLayer = new ol.layer.Vector({//新添加的点图层
+        source: vectorSourceDrawingPoint,
+        style: pointStyles
+      });
+      var vectorLayerDrawing = new ol.layer.Vector({//线图层
         source: vectorSourceDrawing
       });
     var openStreetMapLayer = new ol.layer.Tile({
@@ -169,6 +333,7 @@
         layers: [
           openStreetMapLayer,
           vectorLayer,
+          vectorPointAddLayer,
           vectorLayerDrawing
         ],
         view: new ol.View({
@@ -190,11 +355,12 @@
       //     50
       //   )
       // );
-      var newfeatures;
-      fetchJSON('assets/data/pointtest2.geojson')
+      var newfeatures;    //用来保存读出的json对象
+      fetchJSON('data/json/losteventgeojson.geojson')
 
         .then(function(points_fc) {
         newfeatures = points_fc;
+        // console.log(typeof(newfeatures));//对象形式
         vectorSource.addFeatures(geojsonToFeatures(points_fc, {
           featureProjection: 'EPSG:3857'
         }));
@@ -224,31 +390,257 @@
           draw.on('drawend', function(e) {
             // Remove immediately other features for demo purpose
             vectorSourceDrawing.clear();
+            clearcontent();//清空content中的内容
             var formatDraw = new ol.format.GeoJSON({
               defaultDataProjection: 'EPSG:4326'
             });
             var featureDraw = formatDraw.writeFeature(e.feature);
-
+            var featureDrawObj;
+            eval("featureDrawObj="+featureDraw); 
+            console.log(featureDrawObj);
             // Loop on features
             vectorSource.getFeatures().forEach(function(el) {
               var feat = formatDraw.writeFeature(el);
+              var featobj;
+            eval("featobj="+feat); 
               // Below function can be replaced with ol.extent.intersects
               // if drawing a bounding box
-              var isInside = turf.inside(feat, featureDraw);
+              var isInside = turf.inside(featobj, featureDrawObj);
+              // var isInside = turf.inside(feat, featureDraw);
               el.set('isInside', isInside);
             });
           vectorSource.getFeatures().forEach(function(el) {
                 var isInside = el.get('isInside');
                 if (isInside != undefined && isInside === true) {
-                  console.log(el.p.FID);
-                  console.log(el.area);
-                } 
+                  // console.log(el.p.FID);
+                  console.log(el);
+                  document.getElementById('popdiv').style.display = 'block';
+                  add_line(el);
+                }
+
+                // var feat = formatDraw.writeFeature(el);
+
             });
           });
+
           // Add the interaction to the map
           map.addInteraction(draw);
         }
       };
+      
+
+//添加点的触发事件
+ var button = document.getElementById('drawpointtoggle');
+      var drawpoint;
+      button.onclick = function(e) {
+        var toggleState = this.getAttribute('datapoint-toggle');
+        // Some issues due to type. Can't use !toggleState to go back and forth
+        // between true and false (type not boolean but string)
+        // Remove drawing interaction if true
+        if (toggleState === 'true') {
+          this.setAttribute('datapoint-toggle', 'false');
+          map.removeInteraction(drawpoint);
+        } else {
+          this.setAttribute('datapoint-toggle', 'true');
+          // Assign draw interaction (variable created before for scope reason)
+          drawpoint = new ol.interaction.Draw({
+            source: vectorSourceDrawingPoint,
+            type: 'Point'
+          });
+
+          // Bind event on the draw component
+          drawpoint.on('drawend', function(e) {
+            // Remove immediately other features for demo purpose
+            // vectorSourceDrawing.clear();
+            // clearcontent();//清空content中的内容
+            var formatDraw = new ol.format.GeoJSON({
+              defaultDataProjection: 'EPSG:3857'
+            });
+            var featureDraw = formatDraw.writeFeature(e.feature);
+            console.log(featureDraw);
+
+            var featureDrawObj;
+            eval("featureDrawObj="+featureDraw); 
+            console.log(featureDrawObj);
+
+            featureDrawObj.geometry.coordinates=ol.proj.toLonLat(featureDrawObj.geometry.coordinates, 'EPSG:3857');
+            featureDrawObj.properties={location:document.getElementById("place").value,contactway:document.getElementById("phonenumber").value,event:document.getElementById("describe").value};
+            console.log(featureDrawObj);
+
+            fetchJSON('data/json/losteventgeojson.geojson')
+            .then(function(points_fc) {
+            tempfeatures = points_fc;
+            tempfeatures.features.push(featureDrawObj);
+            console.log(tempfeatures);//对象形式
+            readfile(tempfeatures);
+            alert("添加数据成功");
+          });
+        });
+          // 添加交互事件
+          map.addInteraction(drawpoint);
+        }
+      };
+
+function readfile(data) {//写入json文件
+     var url = './php/readfile.php';
+     jQuery.ajax({
+         url: url,
+         data: data,
+         type: 'POST',
+         // dataType: 'json',
+         complete: function(xhr, textStatus) {
+             //called when complete
+         },
+         success: function(data, textStatus, xhr) {
+             //called when successful
+             console.log(data);
+         },
+         error: function(xhr, textStatus, errorThrown) {
+             //called when there is an error
+         }
+     });
+ }
+
+    var currentStep = 0;
+    var max_line_num = 0;
+    //添加新记录
+    function add_line(el) {
+        max_line_num = $("#content tr:last-child").children("td").html();
+        if (max_line_num == null) {
+            max_line_num = 1;
+        }
+        else {
+            max_line_num = parseInt(max_line_num);
+            max_line_num += 1;
+        }
+        $('#content').append(
+        "<tr id='line" + max_line_num + "'>" +
+            "<td class='td_Num'>" + max_line_num + "</td>" +
+            "<td class='td_Item'><input type='text'  style='width:70px' class='stepName' value='" + el.U.location + "'></input></td>" +
+            "<td class='td_Item'><input type='text' style='width:70px'  class='stepDescription' value='" + el.U.contactway + "'></td>" +
+            "<td class='td_Oper'><input type='text' style='width:170px'  class='stepDescription' value='" + el.U.event + "'></td>" +
+            // "<td class='td_Oper'>" +            "</td>" +
+        "</tr>");
+    }
+    //删除选择记录
+    function clearcontent()
+    {
+      $("#content tr").each(function () {
+                $(this).remove(); 
+            });
+      max_line_num=0;
+    }
+    function remove_line(index) {
+        if (index != null) {
+            currentStep = $(index).parent().parent().find("td:first-child").html();
+        }
+        if (currentStep == 0) {
+            alert('请选择一项!');
+            return false;
+        }
+        if (confirm("确定要删除改记录吗？")) {
+            $("#content tr").each(function () {
+                var seq = parseInt($(this).children("td").html());
+                if (seq == currentStep) { $(this).remove(); }
+                if (seq > currentStep) { $(this).children("td").each(function (i) { if (i == 0) $(this).html(seq - 1); }); }
+            });
+        }
+    }
+    //上移
+    function up_exchange_line(index) {
+        if (index != null) {
+            currentStep = $(index).parent().parent().find("td:first-child").html();
+        }
+        if (currentStep == 0) {
+            alert('请选择一项!');
+            return false;
+        }
+        if (currentStep <= 1) {
+            alert('已经是最顶项了!');
+            return false;
+        }
+        var upStep = currentStep - 1;
+        //修改序号
+        $('#line' + upStep + " td:first-child").html(currentStep);
+        $('#line' + currentStep + " td:first-child").html(upStep);
+        //取得两行的内容
+        var upContent = $('#line' + upStep).html();
+        var currentContent = $('#line' + currentStep).html();
+        $('#line' + upStep).html(currentContent);
+        //交换当前行与上一行内容
+        $('#line' + currentStep).html(upContent);
+        $('#content tr').each(function () { $(this).css("background-color", "#ffffff"); });
+        $('#line' + upStep).css("background-color", "yellow");
+        event.stopPropagation(); //阻止事件冒泡
+    }
+    //下移
+    function down_exchange_line(index) {
+        if (index != null) {
+            currentStep = $(index).parent().parent().find("td:first-child").html();
+        }
+        if (currentStep == 0) {
+            alert('请选择一项!');
+            return false;
+        }
+        if (currentStep >= max_line_num) {
+            alert('已经是最后一项了!');
+            return false;
+        }
+        var nextStep = parseInt(currentStep) + 1;
+        //修改序号
+        $('#line' + nextStep + " td:first-child").html(currentStep);
+        $('#line' + currentStep + " td:first-child").html(nextStep);
+        //取得两行的内容
+        var nextContent = $('#line' + nextStep).html();
+        var currentContent = $('#line' + currentStep).html();
+        //交换当前行与上一行内容
+        $('#line' + nextStep).html(currentContent);
+        $('#line' + currentStep).html(nextContent);
+        $('#content tr').each(function () { $(this).css("background-color", "#ffffff"); });
+        $('#line' + nextStep).css("background-color", "yellow");
+        event.stopPropagation(); //阻止事件冒泡
+    }
+    //保存数据
+    function SaveData() {
+        var data = "<root>";
+        $('#content tr').each(function () {
+            data += "<item>";
+            var stepName = $(this).find("td:eq(1)").find("input").val();
+            var stepDescription = $(this).find("td:eq(2)").find("input").val();
+            data += "   <stepName>" + stepName + "</stepName>";
+            data += "   <stepDescription>" + stepDescription + "</stepDescription>";
+            data += "<item>";
+        });
+        data += "</root>";
+        alert(data);
+    }
+
+function addLostPoint()
+{
+   console.log("添加丢失物品");
+   
+}
+
+function clearfun()
+{
+  console.log("清空");
+  document.getElementById('popdiv').style.display = 'none';
+  vectorSourceDrawing.clear();
+  clearcontent();
+  map.removeInteraction(drawpoint);
+  map.removeInteraction(draw);
+}
+function resultfun(){
+  console.log("查看全部丢失数据");
+  clearfun();
+   vectorSource.getFeatures().forEach(function(el) {
+                  console.log(el);
+                  document.getElementById('popdiv').style.display = 'block';
+                  add_line(el);
+            });
+}
+
+
     </script>
   </body>
 </html>

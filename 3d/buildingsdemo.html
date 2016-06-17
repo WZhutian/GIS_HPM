@@ -126,7 +126,7 @@
     <div id="cover1"><a href="../heatmap.html">垃圾箱管理<i class="icon-chevron-down"></i></a></div>
     <div id="icon"><i class="icon-book" ></i></div>
     <ul class="one" id="about">
-      <li><img src="img/thumb1.png" alt="image">
+      <!-- <li><img src="img/thumb1.png" alt="image"> -->
         <h3><i class="icon-user"></i>模型简介及参数说明</h3>
         <p>
         道路理论垃圾桶数量 =<br>（人均垃圾量*一天总的道路人流量）/（容量*清理次数）<br><br>
@@ -165,22 +165,8 @@
   
 </ul>
   <div id="map_main"></div>
-  <!-- <div class="control tilt">
-    <button class="dec">&#8601;</button>
-    <button class="inc">&#8599;</button>
-  </div>
-
-  <div class="control rotation">
-    <button class="inc">&#8630;</button>
-    <button class="dec">&#8631;</button>
-  </div>
-
-  <div class="control zoom">
-    <button class="dec">-</button>
-    <button class="inc">+</button>
-  </div> -->
   <div id="building_buttons">
-    Hour of day (1-23) (for shadow):
+    日照情况：
     <input id="inp_hour_of_day" size="3" type="number" value="15" min="1" max="23">
     <br />
   </div>
@@ -219,7 +205,8 @@
 
             function add_osmb_click()   {
                 console.log("add_osmb_onclick fired");
-                $.getJSON("data/basemap_geojson.geojson", function(result) {
+                // $.getJSON("data/basemap_geojson.geojson", function(result) {
+                $.getJSON("data/basemap2geojson.geojson", function(result) {
                  try {
                     geoJson=result;
                   } catch(e) {}

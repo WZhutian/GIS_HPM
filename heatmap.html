@@ -6,6 +6,7 @@
     <title>垃圾箱管理</title>
     <!-- <link rel="stylesheet" href="http://openlayers.org/en/v3.16.0/css/ol.css" type="text/css">
   -->
+    <script type="text/javascript" src="js/echarts.js"></script>
     <script src="http://openlayers.org/en/v3.16.0/build/ol.js"></script>
     <link rel="stylesheet" type="text/css" href="font/titillium/stylesheet.css">
     <link rel="stylesheet" type="text/css" href="font/exo-demibold/stylesheet.css">
@@ -29,10 +30,22 @@
     <script src="assets/js/es6-promise.min.js"></script>
     <script src="assets/js/fetch.js"></script>
     <script src="assets/js/helpers.js"></script>
+
+
+  <!-- 右下角工具 -->
+<link rel="stylesheet" type="text/css" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
+<link rel='stylesheet prefetch' href='css/animate.min.css'>
+<link rel="stylesheet" type="text/css" href="css/spindefault.css">
+<link rel="stylesheet" type="text/css" href="css/stylespage1.css">
+ <!-- 打印地图 -->
+  <script type="text/javascript" src="js/FileSaver.js"></script>
+  <script type="text/javascript" src="js/canvas-toBlob.js"></script>
+
     <style type="text/css">
       html,body{
-        width: 100%;
-        height:100%;
+    /*    width: 100%;
+        height:100%;*/
+        background-color: white;
       }
     </style>
 </head>
@@ -119,32 +132,237 @@
             <a href="#"><i class="icon-search"></i></a>
         </li>
     </ul>
-    <div id="totalmap" style="width:100%;height:100%">
+    <div id="totalmap" style="width:100%;height:60%">
         <div id="map" class="map" style="float:left;width:50%;height:100%"></div>
         <div id="map1" class="map1" style="float:left; width:50%;height:100%"></div>
     </div>
-    <div>定量分析图表</div>
-    <!-- <div id="map1" class="map1"></div>
--->
-    <!-- <form>
-<label>radius size</label>
-<input id="radius" type="range" min="1" max="50" step="1" value="5"/>
-<label>blur size</label>
-<input id="blur" type="range" min="1" max="50" step="1" value="15"/>
-</form> -->
-    <script>
-    // var blur = document.getElementById('blur');
-    // var radius = document.getElementById('radius');
 
+    <div id="popdiv" style="display:block;height:40%;width:70%;margin-left:10px;"></div>
+    <div id="popdivright" style="display:block;height:40%;width:50%;margin-left:50px;">
+        <table id="travel">
+    <thead>    
+        <tr>
+            <th scope="col" rowspan="2">道路垃圾桶分布合理性</th>
+            <th scope="col" colspan="7">道路参数</th>
+        </tr>
+        
+        <tr>
+            <th scope="col">日均人流量(百人)</th>
+            <th scope="col">功能区</th>
+            <th scope="col">人均垃圾量(cm3)</th>
+            <th scope="col">垃圾箱容量(升)</th>
+            <th scope="col">日清理次数</th>
+            <th scope="col">理论个数</th>
+            <th scope="col">实际个数</th>
+        </tr>        
+    </thead>
+    
+<!--     <tfoot>
+       <tr>
+            <th scope="row">All modes</th>
+            <td>55</td>
+            <td>39</td>
+            <td>27</td>
+            <td>39</td>
+            <td>20</td>
+            <td>23</td>
+        </tr>
+    </tfoot> -->
+    
+    <tbody>
+        <tr>
+        <th scope="row">荟萃路北段</th>
+            <td name="renliuliang">20</td>
+            <td>餐饮区</td>
+            <td name="rubbish">15</td>
+            <td>8</td>
+            <td><input  size="3" name="cishu" type="number" value="1" min="1" max="23" oninput="keydown()"></td>
+            <td><input size="3" type="Text" name="lnum" value="2" readonly="readonly"></td>
+            <td>0</td>
+        </tr>
+        
+        <tr>
+            <th scope="row">网球场北路</th>
+            <td name="renliuliang">18</td>
+            <td>餐饮区</td>
+            <td name="rubbish">15</td>
+            <td>8</td>
+            <td><input  size="3" name="cishu" type="number" value="1" min="1" max="23" oninput="keydown()"></td>
+            <td><input size="3" type="Text" name="lnum" value="2" readonly="readonly"></td>
+            <td>3</td>
+        </tr>
+        
+        <tr>
+            <th scope="row">求实路(体育馆)</th>
+            <td name="renliuliang">48</td>
+            <td>道路,教学区</td>
+            <td name="rubbish">11</td>
+            <td>8</td>
+            <td><input  size="3" name="cishu" type="number" value="1" min="1" max="23" oninput="keydown()"></td>
+            <td><input size="3" type="Text" name="lnum" value="2" readonly="readonly"></td>
+            <td>3</td>
+        </tr>
+        
+        <tr>
+            <th scope="row">求实路(教三南)</th>
+           <td name="renliuliang">28</td>
+            <td>教学区,道路</td>
+            <td name="rubbish">11</td>
+            <td>8</td>
+            <td><input  size="3" name="cishu" type="number" value="1" min="1" max="23" oninput="keydown()"></td>
+            <td><input size="3" type="Text" name="lnum" value="2" readonly="readonly"></td>
+            <td>5</td>
+        </tr>
+        
+        <tr>
+            <th scope="row">弘毅路</th>
+            <td name="renliuliang">40</td>
+            <td>住宿区,餐饮区</td>
+            <td name="rubbish">16</td>
+            <td>8</td>
+            <td><input  size="3" name="cishu" type="number" value="1" min="1" max="23" oninput="keydown()"></td>
+            <td><input size="3" type="Text" name="lnum" value="2" readonly="readonly"></td>
+            <td>4</td>
+        </tr>
+        
+        <tr>
+            <th scope="row">西一路</th>
+            <td name="renliuliang">24</td>
+            <td>道路</td>
+            <td name="rubbish">7</td>
+            <td>8</td>
+            <td><input  size="3" name="cishu" type="number" value="1" min="1" max="23" oninput="keydown()"></td>
+            <td><input size="3" type="Text" name="lnum" value="2" readonly="readonly"></td>
+            <td>1</td>
+        </tr>
+        
+        <tr>
+            <th scope="row">教三南一路</th>
+            <td name="renliuliang">18</td>
+            <td>教学区</td>
+            <td name="rubbish">12</td>
+            <td>8</td>
+            <td><input  size="3" name="cishu" type="number" value="1" min="1" max="23" oninput="keydown()"></td>
+            <td><input size="3" type="Text" name="lnum" value="2" readonly="readonly"></td>
+            <td>3</td>
+        </tr>
+        <tr>
+            <th scope="row">西二路西</th>
+            <td name="renliuliang">10</td>
+            <td>教学区</td>
+            <td name="rubbish">8</td>
+            <td>8</td>
+            <td><input  size="3" name="cishu" type="number" value="1" min="1" max="23" oninput="keydown()"></td>
+            <td><input size="3" type="Text" name="lnum" value="2" readonly="readonly"></td>
+            <td>3</td>
+        </tr>
+        <tr>
+            <th scope="row">西二路东</th>
+            <td name="renliuliang">15</td>
+            <td>休闲区</td>
+            <td name="rubbish">10</td>
+            <td>8</td>
+            <td><input  size="3" name="cishu" type="number" value="1" min="1" max="23" oninput="keydown()"></td>
+            <td><input size="3" type="Text" name="lnum" value="2" readonly="readonly"></td>
+            <td>6</td>
+        </tr>
+        <tr>
+            <th scope="row">天桥</th>
+           <td name="renliuliang">20</td>
+            <td>道路</td>
+            <td name="rubbish">8</td>
+            <td>8</td>
+            <td><input  size="3" name="cishu" type="number" value="1" min="1" max="23" oninput="keydown()"></td>
+            <td><input size="3" type="Text" name="lnum" value="2" readonly="readonly"></td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <th scope="row">桃李路</th>
+            <td name="renliuliang">13</td>
+            <td>休闲区</td>
+            <td name="rubbish">10</td>
+            <td>8</td>
+            <td><input  size="3" name="cishu" type="number" value="1" min="1" max="23" oninput="keydown()"></td>
+            <td><input size="3" type="Text" name="lnum" value="2" readonly="readonly"></td>
+            <td>3</td>
+        </tr>
+    </tbody>
+</table>
+<script language="JavaScript">
+keydown();
+function keydown(){
+    var renliuliang=document.getElementsByName("renliuliang");  //道路人流量
+    var rubbish=document.getElementsByName("rubbish");          //道路人均垃圾量
+    var cishu=document.getElementsByName("cishu");                //日清理次数
+    var lnum=document.getElementsByName("lnum");                  //理论垃圾桶数量
+    console.log(renliuliang);
+    console.log(rubbish);
+    console.log(cishu);
+    for (var i = document.getElementsByName("lnum").length - 1; i >= 0; i--) {
+        lnum[i].value=(renliuliang[i].innerText)*100*(rubbish[i].innerText)/(cishu[i].value*8000);
+    }
+}
+</script>
+    </div>
+        <!-- 右下角工具栏 -->
+<div class="htmleaf-container">
+  <div id='ss_menu'>
+    <div>
+    <i class="fa fa-print" id="printmap" onclick="printmapfun()"><a id="export-png" class="btn btn-default" download="map.png"></a></i>
+    </div>
+    <div>
+    <i class="fa fa-bar-chart" id="measurelength" onclick="showpopdiv()" data-toggle="false"></i>
+    </div>
+    <div>
+    <i class="fa fa-calculator" id="measurearea" onclick="showpopright()" data-toggle="false"></i>
+    </div>
+    <div>
+    <i class="fa fa-globe" id="globemap" onclick="globemapfun()"></i>
+    </div>
+    <div class='menu'>
+    <div class='share ' id='ss_toggle' data-rot='180'>
+      <div class='circle'></div>
+      <div class='bar'></div>
+    </div>
+    </div>
+  </div>
+</div>
+<script>
+//右下角旋转菜单
+$(document).ready(function (ev) {
+  var toggle = $('#ss_toggle');
+  var menu = $('#ss_menu');
+  var rot;
+  $('#ss_toggle').on('click', function (ev) {
+    rot = parseInt($(this).data('rot')) - 180;
+    menu.css('transform', 'rotate(' + rot + 'deg)');
+    menu.css('webkitTransform', 'rotate(' + rot + 'deg)');
+    if (rot / 180 % 2 == 0) {
+      toggle.parent().addClass('ss_active');
+      toggle.addClass('close');
+    } else {
+      toggle.parent().removeClass('ss_active');
+      toggle.removeClass('close');
+    }
+    $(this).data('rot', rot);
+  });
+  menu.on('transitionend webkitTransitionEnd oTransitionEnd', function () {
+    if (rot / 180 % 2 == 0) {
+      $('#ss_menu div i').addClass('ss_animate');
+    } else {
+      $('#ss_menu div i').removeClass('ss_animate');
+    }
+  });
+});
+</script>
+    <script>
     var vector = new ol.layer.Heatmap({
         source: new ol.source.Vector({
             url: 'assets/data/pointclusterkml.kml',
             format: new ol.format.KML({
                 extractStyles: false
             })
-        }),
-        // blur: parseInt(blur.value, 10),
-        // radius: parseInt(radius.value, 10)
+        })
     });
     console.log(vector);
     vector.getSource().on('addfeature', function(event) {
@@ -155,17 +373,18 @@
     var openStreetMapLayer = new ol.layer.Tile({
         source:new ol.source.OSM()
     });
+    var mapcenter=[114.3983815703, 30.5256872217];
+    var mapCenter=ol.proj.fromLonLat([114.3983815703, 30.5256872217]);
+
+    var view1 = new ol.View({
+        // the view's initial state
+        center:ol.proj.transform(mapcenter, 'EPSG:4326', 'EPSG:3857'),
+        zoom: 15
+      });
     var map = new ol.Map({
         layers: [openStreetMapLayer, vector],
         target: 'map',
-        view: new ol.View({
-            center: ol.proj.transform(
-                [114.3983815703, 30.5256872217],
-                'EPSG:4326',
-                'EPSG:3857'
-            ),
-            zoom: 15
-        })
+        view: view1
     });
     // blur.addEventListener('input', function() {
     //   vector.setBlur(parseInt(blur.value, 10));
@@ -234,6 +453,121 @@
             }));
 
         });
+
+        showpopdiv();
+        //人流量图表展示
+        function showpopdiv(){
+              var dom = document.getElementById("popdiv");
+                var myChart = echarts.init(dom);
+                // dom.style.display = 'block';
+                var hours = ['12', '1', '2', '3', '4', '5', '6',
+                        '7', '8', '9','10','11',
+                        '12', '1', '2', '3', '4', '5',
+                        '6', '7', '8', '9', '10', '11'];
+                var days = ['周日', '周五', '周四',
+                        '周三', '周二', '周一', '周六'];
+
+                var data = [
+                [0,0,0],[0,1,0],[0,2,0],[0,3,0],[0,4,0],[0,5,1],[0,6,1],[0,7,2],[0,8,6],[0,9,4],[0,10,4],[0,11,6],[0,12,5],[0,13,2],[0,14,3],[0,15,2],[0,16,3],[0,17,6],[0,18,7],[0,19,8],[0,20,4],[0,21,3],[0,22,2],[0,23,1],
+                [1,0,0],[1,1,0],[1,2,0],[1,3,0],[1,4,0],[1,5,0],[1,6,1],[1,7,2],[1,8,7],[1,9,6],[1,10,6],[1,11,7],[1,12,5],[1,13,4],[1,14,2],[1,15,2],[1,16,3],[1,17,7],[1,18,8],[1,19,8],[1,20,5],[1,21,5],[1,22,4],[1,23,2],
+                [2,0,0],[2,1,1],[2,2,0],[2,3,0],[2,4,0],[2,5,1],[2,6,3],[2,7,8],[2,8,15],[2,9,12],[2,10,9],[2,11,6],[2,12,8],[2,13,8],[2,14,14],[2,15,10],[2,16,8],[2,17,15],[2,18,15],[2,19,9],[2,20,5],[2,21,5],[2,22,5],[2,23,4],
+                [3,0,0],[3,1,0],[3,2,0],[3,3,0],[3,4,0],[3,5,2],[3,6,3],[3,7,9],[3,8,10],[3,9,10],[3,10,12],[3,11,9],[3,12,10],[3,13,6],[3,14,9],[3,15,11],[3,16,9],[3,17,13],[3,18,15],[3,19,10],[3,20,6],[3,21,4],[3,22,2],[3,23,1],
+                [4,0,0],[4,1,0],[4,2,0],[4,3,0],[4,4,0],[4,5,1],[4,6,6],[4,7,9],[4,8,12],[4,9,14],[4,10,8],[4,11,12],[4,12,12],[4,13,7],[4,14,4],[4,15,14],[4,16,5],[4,17,15],[4,18,14],[4,19,8],[4,20,7],[4,21,6],[4,22,2],[4,23,0],
+                [5,0,0],[5,1,0],[5,2,0],[5,3,0],[5,4,0],[5,5,1],[5,6,1],[5,7,6],[5,8,13],[5,9,14],[5,10,7],[5,11,12],[5,12,12],[5,13,5],[5,14,15],[5,15,8],[5,16,10],[5,17,13],[5,18,14],[5,19,8],[5,20,5],[5,21,4],[5,22,2],[5,23,0],
+                [6,0,0],[6,1,0],[6,2,0],[6,3,0],[6,4,0],[6,5,1],[6,6,1],[6,7,5],[6,8,14],[6,9,15],[6,10,7],[6,11,8],[6,12,15],[6,13,4],[6,14,13],[6,15,6],[6,16,10],[6,17,13],[6,18,15],[6,19,10],[6,20,8],[6,21,4],[6,22,2],[6,23,1]];
+                data = data.map(function (item) {
+                    return [item[1], item[0], item[2]];
+                });
+
+                option = {
+                    title: {
+                        text: '日人流量统计'
+                    },
+                    legend: {
+                        data: ['Punch Card'],
+                        left: 'right'
+                    },
+                    tooltip: {
+                        position: 'top',
+                        formatter: function (params) {
+                            return params.value[2] + ' hundred people ' + 'of ' + days[params.value[1]];
+                        }
+                    },
+                    grid: {
+                        left: 2,
+                        bottom: 10,
+                        right: 10,
+                        containLabel: true
+                    },
+                    xAxis: {
+                        type: 'category',
+                        data: hours,
+                        boundaryGap: false,
+                        splitLine: {
+                            show: true,
+                            lineStyle: {
+                                color: '#ddd',
+                                type: 'dashed'
+                            }
+                        },
+                        axisLine: {
+                            show: false
+                        }
+                    },
+                    yAxis: {
+                        type: 'category',
+                        data: days,
+                        axisLine: {
+                            show: false
+                        }
+                    },
+                    series: [{
+                        name: '人流量',
+                        type: 'scatter',
+                        symbolSize: function (val) {
+                            return val[2] * 2;
+                        },
+                        data: data,
+                        animationDelay: function (idx) {
+                            return idx * 5;
+                        }
+                    }]
+                };
+
+                myChart.setOption(option, true);
+        }
+        function showpopright(){
+
+        }
+        function globemapfun(e)   //回到初始位置
+        {
+          console.log("全图显示");
+          var duration = 2000;
+              var start = +new Date();
+              var pan = ol.animation.pan({
+                duration: duration,
+                source: /** @type {ol.Coordinate} */ (view1.getCenter()),
+                start: start
+              });
+              var bounce = ol.animation.bounce({
+                duration: duration,
+                resolution: 4 * view1.getResolution(),
+                start: start
+              });
+              map.beforeRender(pan, bounce);
+              map1.beforeRender(pan, bounce);
+              view1.setCenter(mapCenter);
+              view1.setZoom(15);
+        }
+        function printmapfun(e)   //下载地图
+        {
+            console.log("保存地图");
+            canvas = document.getElementsByTagName('canvas')[0];
+            canvas.toBlob(function (blob) {
+              saveAs(blob, 'map.png');
+            })
+        }
+        
     </script>
 </body>
 

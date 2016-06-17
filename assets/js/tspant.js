@@ -18,6 +18,12 @@ function clear() {
 	vectorSourceDrawing.clear();
 	var out = document.getElementById("outText");
 	out.innerHTML = "";
+	out.style.display='none';
+	points=[];
+	myPoints.features=[];
+	BestRoute=[];
+	vectorSourcePoints.clear();
+	map.removeInteraction(draw);
 }
 
 function initMat(M, N, val) {
@@ -236,9 +242,11 @@ function ACA_TSP() {
 
 	drawPath(); //绘制路径
 
+	alert( "最短路径长度:  " + BestSolution+"千米");
 	var out = document.getElementById("outText");
-	out.innerHTML = "<h1>蚁群算法求解TSP问题: </h1>最佳路径:<br/>";
+	// out.style.display='block';//让最短路径显示出来
+	out.innerHTML = "最佳路径:<br/>";
 	for (i = 0; i < N; i++)
 		out.innerHTML = out.innerHTML + String(BestRoute[i]) + "&nbsp;";
-	out.innerHTML = out.innerHTML + "<br/>最短路径长度:<br/>" + BestSolution;
+	out.innerHTML = out.innerHTML + "<br/>最短路径长度:<br/>" + BestSolution+"千米";
 }
