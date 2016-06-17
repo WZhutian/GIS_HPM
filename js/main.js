@@ -481,10 +481,6 @@ jQuery(document).ready(function($) {
     }
 
 
-    setTimeout(function() {
-        locFun(316, 413, 5)
-    }, 1000)
-
     function drawLoc(array) {
         $.each(array, function(name, value) {
             console.log(value)
@@ -504,9 +500,9 @@ jQuery(document).ready(function($) {
                 var domName = $('#loc-' + array[i]['floor'])
                 drawLine(parseFloat(array[i]['X']), parseFloat(array[i]['Y']), parseFloat(array[i + 1]['X']), parseFloat(array[i + 1]['Y']), domName);
             }
-            $(".Floor_line").each(function() {
-                $(this).animate({ 'top': parseFloat($(this).css('top')) * WZT.topChange + 'px', 'left': parseFloat($(this).css('left')) * WZT.widthChange + 'px', 'height': parseFloat($(this).css('height')) * WZT.topChange + 'px', 'width': parseFloat($(this).css('width')) * WZT.widthChange + 'px' });
-            });
+            // $(".Floor_line").each(function() {
+            //     $(this).animate({ 'top': parseFloat($(this).css('top')) * WZT.topChange + 'px', 'left': parseFloat($(this).css('left')) * WZT.widthChange + 'px', 'height': parseFloat($(this).css('height')) * WZT.topChange + 'px', 'width': parseFloat($(this).css('width')) * WZT.widthChange + 'px' });
+            // });
             //普通情况
         }
 
@@ -516,6 +512,9 @@ jQuery(document).ready(function($) {
 
 
     function locFun(x, y, f) {
+        x=parseFloat(x)
+        y=parseFloat(y)
+        console.log(x,y)
         var FilePath = './loc/' + WZT.Data.B_ID + '.json';
         // var FilePath = '52.json'
         //初始化部分----------------------
@@ -557,6 +556,7 @@ jQuery(document).ready(function($) {
                 var number = result['floorPoints'][f][i];
                 var point = result['points'][number];
                 var length = Math.sqrt((point['X'] - x) * (point['X'] - x) + (point['Y'] - y) * (point['Y'] - y));
+                console.log(number,point,length)
                 if (length < judge) {
                     judge = length;
                     pt = number;
@@ -565,6 +565,7 @@ jQuery(document).ready(function($) {
             b = parseInt(pt);
             //---------------
             var a = parseInt(result['enter'][0])
+            console.log(a,b)
             Astar(a, b);
             var array = new Array();
             var path = b;
@@ -605,14 +606,14 @@ jQuery(document).ready(function($) {
         // var f = new Array; //f=g+h
         function Astar(start, end) {
             //计算起始点和终止点的位置
-            var startPoint = {
-                x: arc_nodes[start][0],
-                y: arc_nodes[start][1]
-            }
-            var endPoint = {
-                x: arc_nodes[end][0],
-                y: arc_nodes[end][1]
-            }
+            // var startPoint = {
+            //     x: arc_nodes[start][0],
+            //     y: arc_nodes[start][1]
+            // }
+            // var endPoint = {
+            //     x: arc_nodes[end][0],
+            //     y: arc_nodes[end][1]
+            // }
             openList.push(start); //第一步先将起始点加入open表中
             while (openList.length > 0) {
                 //取出与该点连接的所有线
@@ -693,8 +694,10 @@ jQuery(document).ready(function($) {
             // console.log(value['F_Name'])
             // console.log(name)
         })
-        console.log(data)
+        // console.log(data)
         $("#floorInfo-pannel").show();
+        // console.log(WZT.Data.Facilitys[R_ID]['X'], WZT.Data.Facilitys[R_ID]['Y'], WZT.edit_Floor)
+        locFun(WZT.Data.Facilitys[R_ID]['X'], WZT.Data.Facilitys[R_ID]['Y'], WZT.edit_Floor)
         wm_json(data, '123123')
             // wm_json()
     }
