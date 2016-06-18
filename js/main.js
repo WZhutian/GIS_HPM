@@ -146,7 +146,6 @@ jQuery(document).ready(function($) {
             var r = window.location.search.substr(1); //获取url中"?"符后的字符串
             var context = r.split('&');
             WZT.Data.B_ID = context[0].split('=')[1];
-            WZT.Data.B_ID = 52;
             console.log("ULR中的楼ID:", WZT.Data.B_ID);
             //从后台获取数据，
             var data = {
@@ -170,7 +169,6 @@ jQuery(document).ready(function($) {
                         WZT.Data.B_Name = data1['building']['B_Name'];
                         $('.cd-product-intro h1').html(WZT.Data.B_Name);
                         WZT.Data.Floors = data1['building']['Floors'];
-                        WZT.Data.Floors = 7;
                         WZT.Data.BaseMap = data1['building']['BaseMap'];
                         WZT.Data.B_Type = data1['building']["B_Type"];
                         for (var i = 0; i < WZT.Data.Floors; i++) {
