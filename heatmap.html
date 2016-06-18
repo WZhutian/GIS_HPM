@@ -23,6 +23,8 @@
     <link rel="stylesheet" href="assets/ol3/css/ol.css" type="text/css">
     <!-- <link rel="stylesheet" href="assets/css/styles.css" type="text/css"> -->
     <script src='https://rawgit.com/Turfjs/turf/v2.0.2/turf.min.js'></script>
+<script type="text/javascript" src="js/style-table.js"></script>
+<link rel="stylesheet" type="text/css" media="screen" href="css/css-table.css" />
     <!-- <script stc="assets/js/olnew.js"></script>
 -->
     <!-- <script src="assets/ol3/js/ol-debug.js"></script>
@@ -43,17 +45,36 @@
 
     <style type="text/css">
       html,body{
-    /*    width: 100%;
-        height:100%;*/
         background-color: white;
       }
     </style>
+      <style type="text/css">
+    #popdivright
+    {
+      position:fixed;
+      right:106px; 
+      bottom:220px; 
+
+      width: 950px;
+    height: 640px;
+    margin: 50px;
+    background-color: #f0f3f9;
+    /*position:relative;*/
+    z-index: 999;
+    /*设置边框蓝光*/
+    -moz-box-shadow:0 0 25px #697cf5;
+    -webkit-box-shadow:0 0 25px #697cf5;
+    box-shadow:0 0 25px #8cb9f5;
+
+    /*设置圆角*/
+    -moz-border-radius: 15px;      /* Gecko browsers */
+    -webkit-border-radius: 15px;   /* Webkit browsers */
+    border-radius:15px;            /* W3C syntax */
+    }
+  </style>
 </head>
 
 <body>
-    <!-- <div id="map" class="map" ></div>
--->
-    <!-- <a href="index.html">返回主页</a> -->
     <ul class="nav" style="position:fixed;">
         <!-- Start Home -->
         <li id="first">
@@ -70,24 +91,13 @@
         </li>
         <!-- Start Portfolio -->
         <li>
-            <div id="cover1"><a href="#">报修管理<i class="icon-chevron-down"></i></a></div>
+            <div id="cover1"><a href="clustertest.html">报修管理<i class="icon-chevron-down"></i></a></div>
             <div id="icon"><i class="icon-briefcase"></i></div>
-            <ul class="one" id="menu">
-                <li><a href="clustertest.html">查看报修信息</a></li>
-                <li><a href="#">导出报修信息</a></li>
-                <li><a href="#">图表分析</a></li>
-                <li><a href="#">修理工管理</a></li>
-            </ul>
         </li>
         <!-- Start Services -->
         <li>
             <div id="cover1"><a href="TSP.html">路径导航<i class="icon-chevron-down"></i></a></div>
             <div id="icon"><i class="icon-truck"></i></div>
-            <!--  <ul class="one" id="menu">
-      <li><a href="#" id="addpoint" data-toggle="false" onclick="addtsppoint()">添加点</a></li>
-      <li><a href="#">文字添加</a></li>
-      <li><a href="#"  onclick="shortestpath()">路径规划</a></li>
-    </ul> -->
         </li>
         <li>
             <div id="cover1"><a href="heatmap.html">垃圾箱管理<i class="icon-chevron-down"></i></a></div>
@@ -120,9 +130,7 @@
                     <input name="email" type="text" id="email">
                     <p>描述<em>*</em></p>
                     <textarea name="comment" cols="" rows="" id="comment"></textarea>
-                    <input name="send" type="button" id="send" value="提交">
-                    <input name="send" type="button" id="send" value="查看全部">
-                    <input name="send" type="button" id="send" value="区域查询">
+                    <p>请在地图上添加物品丢失的位置<em>*</em></p>
                 </li>
             </ul>
         </li>
@@ -138,12 +146,13 @@
     </div>
 
     <div id="popdiv" style="display:block;height:40%;width:70%;margin-left:10px;"></div>
-    <div id="popdivright" style="display:block;height:40%;width:50%;margin-left:50px;">
+    <div id="popdivright" style="display:none;height:40%;width:80%;margin-left:50px;margin-top:50px;">
         <table id="travel">
     <thead>    
         <tr>
             <th scope="col" rowspan="2">道路垃圾桶分布合理性</th>
-            <th scope="col" colspan="7">道路参数</th>
+            <th scope="col" colspan="6">道路参数</th>
+            <th scope="col" colspan="1"><a id="closepopdiv" href="#" onclick=closepopdiv() style="color:red">×</a></th>
         </tr>
         
         <tr>
@@ -156,19 +165,6 @@
             <th scope="col">实际个数</th>
         </tr>        
     </thead>
-    
-<!--     <tfoot>
-       <tr>
-            <th scope="row">All modes</th>
-            <td>55</td>
-            <td>39</td>
-            <td>27</td>
-            <td>39</td>
-            <td>20</td>
-            <td>23</td>
-        </tr>
-    </tfoot> -->
-    
     <tbody>
         <tr>
         <th scope="row">荟萃路北段</th>
@@ -288,7 +284,8 @@
         </tr>
     </tbody>
 </table>
-<script language="JavaScript">
+    </div>
+<script>
 keydown();
 function keydown(){
     var renliuliang=document.getElementsByName("renliuliang");  //道路人流量
@@ -302,8 +299,10 @@ function keydown(){
         lnum[i].value=(renliuliang[i].innerText)*100*(rubbish[i].innerText)/(cishu[i].value*8000);
     }
 }
+function closepopdiv(){
+    document.getElementById("popdivright").style.display='none';
+}
 </script>
-    </div>
         <!-- 右下角工具栏 -->
 <div class="htmleaf-container">
   <div id='ss_menu'>
@@ -358,7 +357,8 @@ $(document).ready(function (ev) {
     <script>
     var vector = new ol.layer.Heatmap({
         source: new ol.source.Vector({
-            url: 'assets/data/pointclusterkml.kml',
+            url: 'data/kml/midu.kml',
+            // url: 'assets/data/pointclusterkml.kml',
             format: new ol.format.KML({
                 extractStyles: false
             })
@@ -373,26 +373,19 @@ $(document).ready(function (ev) {
     var openStreetMapLayer = new ol.layer.Tile({
         source:new ol.source.OSM()
     });
-    var mapcenter=[114.3983815703, 30.5256872217];
-    var mapCenter=ol.proj.fromLonLat([114.3983815703, 30.5256872217]);
+    var mapcenter=[114.3945500000, 30.5247090000];
+    var mapCenter=ol.proj.fromLonLat([114.3945500000, 30.5247090000]);
 
     var view1 = new ol.View({
         // the view's initial state
         center:ol.proj.transform(mapcenter, 'EPSG:4326', 'EPSG:3857'),
-        zoom: 15
+        zoom: 16
       });
     var map = new ol.Map({
         layers: [openStreetMapLayer, vector],
         target: 'map',
         view: view1
     });
-    // blur.addEventListener('input', function() {
-    //   vector.setBlur(parseInt(blur.value, 10));
-    // });
-
-    // radius.addEventListener('input', function() {
-    //   vector.setRadius(parseInt(radius.value, 10));
-    // });
     //缓冲区分析部分
     var geojsonObject = {
         "type": "FeatureCollection",
@@ -408,10 +401,6 @@ $(document).ready(function (ev) {
     var vectorSourcePolygons = new ol.source.Vector({
         features: (new ol.format.GeoJSON()).readFeatures(geojsonObject)
     });
-
-
-
-    // var vectorSourcePolygons = new ol.source.GeoJSON();
 
     var pointsStyle = [new ol.style.Style({
         image: new ol.style.Circle({
@@ -437,7 +426,8 @@ $(document).ready(function (ev) {
         view: map.getView()
     });
 
-    fetchJSON('assets/data/pointtest2.geojson')
+    fetchJSON('data/json/rubbishboxgeojson.geojson')
+    // fetchJSON('assets/data/pointtest2.geojson')
         .then(function(polys_fc) {
             console.log(polys_fc);
 
@@ -537,7 +527,7 @@ $(document).ready(function (ev) {
                 myChart.setOption(option, true);
         }
         function showpopright(){
-
+                  document.getElementById('popdivright').style.display = 'block';
         }
         function globemapfun(e)   //回到初始位置
         {
@@ -557,7 +547,7 @@ $(document).ready(function (ev) {
               map.beforeRender(pan, bounce);
               map1.beforeRender(pan, bounce);
               view1.setCenter(mapCenter);
-              view1.setZoom(15);
+              view1.setZoom(16);
         }
         function printmapfun(e)   //下载地图
         {

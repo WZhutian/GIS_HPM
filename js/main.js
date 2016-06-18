@@ -396,6 +396,7 @@ jQuery(document).ready(function($) {
             "R_Name": '',
             "R_Area": ''
         }
+        var dataInside = data;
         console.log(data)
 
         function addRoom(data, edit_Floor, dom) {
@@ -416,7 +417,8 @@ jQuery(document).ready(function($) {
                     if (data == 0)
                         alert('添加失败，网络问题')
                     dom[0].setAttribute('data-r_id', data);
-                    WZT.Data.Facilitys[data]['facility'] = new Array();
+                    dataInside['facility'] = new Array();
+                    WZT.Data.Facilitys[data] = dataInside;
                 },
                 error: function(xhr, textStatus, errorThrown) {
                     //called when there is an error
@@ -483,9 +485,6 @@ jQuery(document).ready(function($) {
 
     function drawLoc(array) {
         $('.loc-contain').html('')
-        $.each(array, function(name, value) {
-            console.log(value)
-        });
         for (var i = 0; i < array.length - 1; i++) {
             //楼梯情况
             var domName = $('#loc-' + array[i]['floor'])
@@ -958,7 +957,9 @@ function SaveData() {
             })
             // data += stepDescription;
     });
-    modRoomFacility(data)
+    console.log(data['Facility'])
+    console.log(JSON.stringify(data['Facility']))
+    modRoomFacility(data['Facility'])
 
     function modRoomFacility(data) {
         var url = './php/modRoomFacility.php';
