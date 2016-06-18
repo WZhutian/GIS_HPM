@@ -456,7 +456,8 @@ jQuery(document).ready(function($) {
 
     function drawLine(A_X, A_Y, B_X, B_Y, dom, d3) {
         if (d3) {
-            var height = 250
+            console.log('top', WZT.topChange)
+            var height = 110 / WZT.topChange;
             var domName = '<div class="Floor_line" style="top:' + (A_Y + 25 - height) + 'px;left:' + (A_X + 25) + 'px;height:' + height + 'px;transform:rotateX(90deg);transform-origin:bottom"></div>'
             $(dom).append(domName);
             return;
@@ -742,6 +743,7 @@ jQuery(document).ready(function($) {
 
     // ]}
     $('#save-data').click(SaveData);
+
     function SaveData() {
         var data = {}
         data['Facility'] = new Array()
@@ -750,11 +752,11 @@ jQuery(document).ready(function($) {
             var stepName = $(this).find("td:eq(1)").find("input").val();
             var stepDescription = $(this).find("td:eq(2)").find("input").val();
             data['Facility'].push({
-                'F_ID': F_ID,
-                'F_Name': stepName,
-                'F_Num': stepDescription
-            })
-            // data += stepDescription;
+                    'F_ID': F_ID,
+                    'F_Name': stepName,
+                    'F_Num': stepDescription
+                })
+                // data += stepDescription;
         });
 
         data['R_ID'] = WZT.R_ID;

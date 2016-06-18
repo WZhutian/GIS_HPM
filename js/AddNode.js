@@ -119,7 +119,6 @@ jQuery(document).ready(function($) {
             var r = window.location.search.substr(1); //获取url中"?"符后的字符串
             var context = r.split('&');
             WZT.Data.B_ID = context[0].split('=')[1];
-            WZT.Data.B_ID = 52;
             console.log("ULR中的楼ID:", WZT.Data.B_ID);
             //从后台获取数据，
             var data = { "B_ID": WZT.Data.B_ID };
@@ -147,7 +146,7 @@ jQuery(document).ready(function($) {
                         initLoc();
 
                         $('.cd-start').on('click', WZT.buildingChooseAni); //绑定点击事件
-                        $('.mask').css('display','none')
+                        $('.mask').css('display', 'none')
                     },
                     error: function(xhr, textStatus, errorThrown) {
                         //called when there is an error
@@ -330,35 +329,40 @@ jQuery(document).ready(function($) {
         "enter": []
     };
     WZT.Loc.LinePointLast = null; //保存上一个选择的点
+    $('#showLast').click(showLast);
+    function showLast() {
+        $.getJSON("./loc/" + WZT.Data.B_ID + ".json", function(result) {
+            console.log(result)
+            result['']
+            for (var i = 0; i < result['floorPoints'].length; i++) {
+                for (var j = 0; j < result['floorPoints'][i].length; j++) {
+                    var pointid = result['floorPoints'][i][j];
+                    var domName = '<li class="room-legend location-legend" style="top:' + result['points'][pointid]['Y'] + 'px;left:' + result['points'][pointid]['X'] + 'px;"></li>';
+                    $("#cd-floor-" + i + " ul").append(domName);
+                    $("#cd-floor-" + i + " ul li:last-child")[0].setAttribute('data-id', pointid);
+                }
+            }
+            for (var k = 0; k < result['edges'].length; k++) {
+                var A = result['edges'][k]['A'];
+                var B = result['edges'][k]['B'];
+                var floor = result['edges'][k]['Floor'];
+                console.log(A, B, floor)
+                var domName = $('#loc-' + floor)
+                drawLine(parseFloat(result['points'][A]['X']), parseFloat(result['points'][A]['Y']), parseFloat(result['points'][B]['X']), parseFloat(result['points'][B]['Y']), domName)
+            }
+            //
+            $(".room-legend").each(function() {
+                $(this).animate({ 'top': parseFloat($(this).css('top')) * WZT.topChange + 'px', 'left': parseFloat($(this).css('left')) * WZT.widthChange + 'px', 'height': 50 * WZT.topChange + 'px', 'width': 50 * WZT.widthChange + 'px' });
+            });
+            console.log(123123)
+            $(".Floor_line").each(function() {
+                $(this).animate({ 'top': parseFloat($(this).css('top')) * WZT.topChange + 'px', 'left': parseFloat($(this).css('left')) * WZT.widthChange + 'px', 'height': parseFloat($(this).css('height')) * WZT.topChange + 'px', 'width': parseFloat($(this).css('width')) * WZT.widthChange + 'px' });
+            });
+        });
+    }
+
     function initLoc() {
-        // $.getJSON("./loc/" + WZT.Data.B_ID + ".json", function(result) {
-        //     console.log(result)
-        //     result['']
-        //     for (var i = 0; i < result['floorPoints'].length; i++) {
-        //         for (var j = 0; j < result['floorPoints'][i].length; j++) {
-        //             var pointid = result['floorPoints'][i][j];
-        //             var domName = '<li class="room-legend location-legend" style="top:' + result['points'][pointid]['Y'] + 'px;left:' + result['points'][pointid]['X'] + 'px;"></li>';
-        //             $("#cd-floor-" + i + " ul").append(domName);
-        //             $("#cd-floor-" + i + " ul li:last-child")[0].setAttribute('data-id', pointid);
-        //         }
-        //     }
-        //     for (var k = 0; k < result['edges'].length; k++) {
-        //         var A = result['edges'][k]['A'];
-        //         var B = result['edges'][k]['B'];
-        //         var floor = result['edges'][k]['Floor'];
-        //         console.log(A, B, floor)
-        //         var domName = $('#loc-' + floor)
-        //         drawLine(parseFloat(result['points'][A]['X']), parseFloat(result['points'][A]['Y']), parseFloat(result['points'][B]['X']), parseFloat(result['points'][B]['Y']), domName)
-        //     }
-        //     //
-        //     $(".room-legend").each(function() {
-        //         $(this).animate({ 'top': parseFloat($(this).css('top')) * WZT.topChange + 'px', 'left': parseFloat($(this).css('left')) * WZT.widthChange + 'px', 'height': 50 * WZT.topChange + 'px', 'width': 50 * WZT.widthChange + 'px' });
-        //     });
-        //     console.log(123123)
-        //     $(".Floor_line").each(function() {
-        //         $(this).animate({ 'top': parseFloat($(this).css('top')) * WZT.topChange + 'px', 'left': parseFloat($(this).css('left')) * WZT.widthChange + 'px', 'height': parseFloat($(this).css('height')) * WZT.topChange + 'px', 'width': parseFloat($(this).css('width')) * WZT.widthChange + 'px' });
-        //     });
-        // });
+
 
         for (var i = 0; i < WZT.Data.Floors; i++)
             WZT.Loc.Json['floorPoints'][i] = new Array()
@@ -367,7 +371,7 @@ jQuery(document).ready(function($) {
     function drawLine(A_X, A_Y, B_X, B_Y, dom, d3) {
         if (d3) {
             var height = 250
-            var domName = '<div class="Floor_line" style="top:' + (A_Y + 25-height)  + 'px;left:' +( A_X + 25 )+ 'px;height:' + height + 'px;transform:rotateX(90deg);transform-origin:bottom"></div>'
+            var domName = '<div class="Floor_line" style="top:' + (A_Y + 25 - height) + 'px;left:' + (A_X + 25) + 'px;height:' + height + 'px;transform:rotateX(90deg);transform-origin:bottom"></div>'
             $(dom).append(domName);
             return;
         }
@@ -489,8 +493,7 @@ jQuery(document).ready(function($) {
         });
     }
 
-    setTimeout(function() {
-    }, 1000)
+    setTimeout(function() {}, 1000)
 
     function drawLoc(array) {
         $.each(array, function(name, value) {
