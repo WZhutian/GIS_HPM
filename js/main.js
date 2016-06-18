@@ -466,12 +466,12 @@ jQuery(document).ready(function($) {
         var add = 0;
         var sub = 1;
         if (A_Y > B_Y) {
-            var C=A_X;
-            A_X=B_X;
-            B_X=C;
-            C=A_Y;
-            A_Y=B_Y;
-            B_Y=A_Y;
+            var C = A_X;
+            A_X = B_X;
+            B_X = C;
+            var C = A_Y;
+            A_Y = B_Y;
+            B_Y = C;
         }
         if (A_X > B_X) {
             sub = -1;
@@ -493,7 +493,6 @@ jQuery(document).ready(function($) {
         for (var i = 0; i < array.length - 1; i++) {
             //楼梯情况
             var domName = $('#loc-' + array[i]['floor'])
-            console.log(domName)
             if (array[i]['floor'] != array[i + 1]['floor']) {
                 if (array[i]['floor'] > array[i + 1]['floor']) {
                     domName = $('#loc-' + array[i + 1]['floor'])
@@ -687,13 +686,15 @@ jQuery(document).ready(function($) {
     // WZT.edit_Floor = 0;
     function legendClick() {
         $('#content').html('')
-            $(this).addClass('showInPoint');
+        $('.room-legend').removeClass('showInPoint');
+        $(this).addClass('showInPoint');
         var R_ID = $(this).data('r_id');
         console.log(R_ID)
         console.log(WZT.Data.Facilitys)
         var data = {
             "Facility": []
         }
+        WZT.R_ID = R_ID
         $.each(WZT.Data.Facilitys[R_ID]['facility'], function(name, value) {
                 var jsonData = { "F_ID": name, "F_Name": value['F_Name'], "F_Num": value['F_Num'] };
                 data['Facility'].push(jsonData);
@@ -730,6 +731,59 @@ jQuery(document).ready(function($) {
             }
         })
         wm_change(data, 'aa');
+    }
+    //保存数据
+    // 这里会以一下格式发送到后台
+    //  var wm_test= { "Facility": [
+
+    // { "F_Name": "电脑", "F_Num":"20"},
+
+    // { "F_Name": "投影仪", "F_Num":"10"},
+
+    // { "F_Name": "桌子", "F_Num":"50"}
+
+    // ]}
+    $('#save-data').click(SaveData);
+    function SaveData() {
+        var data = {}
+        data['Facility'] = new Array()
+        $('#content tr').each(function() {
+            var F_ID = $(this).find("td:eq(0)").html();
+            var stepName = $(this).find("td:eq(1)").find("input").val();
+            var stepDescription = $(this).find("td:eq(2)").find("input").val();
+            data['Facility'].push({
+                'F_ID': F_ID,
+                'F_Name': stepName,
+                'F_Num': stepDescription
+            })
+            // data += stepDescription;
+        });
+
+        data['R_ID'] = WZT.R_ID;
+        console.log(data)
+        modRoomFacility(data)
+
+        function modRoomFacility(data) {
+            var url = './php/modRoomFacility.php';
+            jQuery.ajax({
+                url: url,
+                data: data,
+                type: 'POST',
+                // dataType: 'json',
+                complete: function(xhr, textStatus) {
+                    //called when complete
+                },
+                success: function(data, textStatus, xhr) {
+                    //called when successful
+                    console.log(data);
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    //called when there is an error
+                }
+            });
+        }
+        // addFacility(data);
+        // console.log(data);
     }
 });
 
@@ -937,53 +991,4 @@ function down_exchange_line(index) {
     });
     $('#line' + nextStep).css("background-color", "yellow");
     event.stopPropagation(); //阻止事件冒泡
-}
-//保存数据
-// 这里会以一下格式发送到后台
-//  var wm_test= { "Facility": [
-
-// { "F_Name": "电脑", "F_Num":"20"},
-
-// { "F_Name": "投影仪", "F_Num":"10"},
-
-// { "F_Name": "桌子", "F_Num":"50"}
-
-// ]}
-function SaveData() {
-    var data = {}
-    data['Facility'] = new Array()
-    $('#content tr').each(function() {
-        var F_ID = $(this).find("td:eq(0)").html();
-        var stepName = $(this).find("td:eq(1)").find("input").val();
-        var stepDescription = $(this).find("td:eq(2)").find("input").val();
-        data['Facility'].push({
-                'F_ID': F_ID,
-                'F_Name': stepName,
-                'F_Num': stepDescription
-            })
-            // data += stepDescription;
-    });
-    modRoomFacility(data)
-
-    function modRoomFacility(data) {
-        var url = './php/modRoomFacility.php';
-        jQuery.ajax({
-            url: url,
-            data: data,
-            type: 'POST',
-            // dataType: 'json',
-            complete: function(xhr, textStatus) {
-                //called when complete
-            },
-            success: function(data, textStatus, xhr) {
-                //called when successful
-                console.log(data);
-            },
-            error: function(xhr, textStatus, errorThrown) {
-                //called when there is an error
-            }
-        });
-    }
-    // addFacility(data);
-    // console.log(data);
 }
