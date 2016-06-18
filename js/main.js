@@ -513,9 +513,9 @@ jQuery(document).ready(function($) {
 
 
     function locFun(x, y, f) {
-        x=parseFloat(x)
-        y=parseFloat(y)
-        console.log(x,y)
+        x = parseFloat(x)
+        y = parseFloat(y)
+        console.log(x, y)
         var FilePath = './loc/' + WZT.Data.B_ID + '.json';
         // var FilePath = '52.json'
         //初始化部分----------------------
@@ -557,7 +557,7 @@ jQuery(document).ready(function($) {
                 var number = result['floorPoints'][f][i];
                 var point = result['points'][number];
                 var length = Math.sqrt((point['X'] - x) * (point['X'] - x) + (point['Y'] - y) * (point['Y'] - y));
-                console.log(number,point,length)
+                console.log(number, point, length)
                 if (length < judge) {
                     judge = length;
                     pt = number;
@@ -566,7 +566,7 @@ jQuery(document).ready(function($) {
             b = parseInt(pt);
             //---------------
             var a = parseInt(result['enter'][0])
-            console.log(a,b)
+            console.log(a, b)
             Astar(a, b);
             var array = new Array();
             var path = b;
@@ -690,12 +690,12 @@ jQuery(document).ready(function($) {
             "Facility": []
         }
         $.each(WZT.Data.Facilitys[R_ID]['facility'], function(name, value) {
-            var jsonData = { "F_ID": name, "F_Name": value['F_Name'], "F_Num": value['F_Num'] };
-            data['Facility'].push(jsonData);
-            // console.log(value['F_Name'])
-            // console.log(name)
-        })
-        // console.log(data)
+                var jsonData = { "F_ID": name, "F_Name": value['F_Name'], "F_Num": value['F_Num'] };
+                data['Facility'].push(jsonData);
+                // console.log(value['F_Name'])
+                // console.log(name)
+            })
+            // console.log(data)
         $("#floorInfo-pannel").show();
         // console.log(WZT.Data.Facilitys[R_ID]['X'], WZT.Data.Facilitys[R_ID]['Y'], WZT.edit_Floor)
         locFun(WZT.Data.Facilitys[R_ID]['X'], WZT.Data.Facilitys[R_ID]['Y'], WZT.edit_Floor)
@@ -958,7 +958,27 @@ function SaveData() {
             })
             // data += stepDescription;
     });
-    console.log(data)
-        // addFacility(data);
-        // console.log(data);
+    modRoomFacility(data)
+
+    function modRoomFacility(data) {
+        var url = './php/modRoomFacility.php';
+        jQuery.ajax({
+            url: url,
+            data: data,
+            type: 'POST',
+            // dataType: 'json',
+            complete: function(xhr, textStatus) {
+                //called when complete
+            },
+            success: function(data, textStatus, xhr) {
+                //called when successful
+                console.log(data);
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                //called when there is an error
+            }
+        });
+    }
+    // addFacility(data);
+    // console.log(data);
 }
