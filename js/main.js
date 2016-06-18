@@ -466,7 +466,7 @@ jQuery(document).ready(function($) {
         var add = 0;
         var sub = 1;
         if (A_Y > B_Y) {
-            var c=A_X;
+            var C=A_X;
             A_X=B_X;
             B_X=C;
             C=A_Y;
