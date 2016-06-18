@@ -19,14 +19,69 @@
 	var order2={
 		W_ID:12
 	}
+
 	login(data);
 	getWorkOrder();
         // finishWorkOrder(order2);
-        getBuildingInfo_All();
+        //getBuildingInfo_All();
         var order3={
-        	B_ID:1
+        	B_ID:52
         }
-        getBuildingInfo(order3);
+      //  getBuildingInfo(order3);
+
+        var order4={
+        	F_ID:1,
+        	F_Name:"大大的马蹄",
+        	F_Num:9
+        }
+        readfile(order4);
+        var order5={
+        	B_ID:52,
+            R_ID:21,
+        	Floor:1,
+        	L_ID:2,
+        	X:20,
+        	Y:30,
+        	R_Name:"110sushe",
+        	R_Area:"30"
+        }
+        var order6={
+            F_ID:0,
+            F_Name:"modesk",
+            F_Num:30
+        }
+        var order7={'Facility': [
+        // {
+        //         F_ID:1,
+        //         F_Name:"lal",
+        //         F_Num:50
+        //     },
+        //   {
+        //         F_ID:2,
+        //         F_Name:"rok",
+        //         F_Num:40
+        //     },
+            {
+                F_ID:3,
+                F_Name:"ggg",
+                F_Num:50
+            }]
+
+    }
+       
+          
+        var order8={
+            F_Name:"haah",
+            F_Num:90,
+            R_ID:21
+        }
+      //  addFacility(order8);
+  //   deFacility(order6);
+       //addRoom(order5);
+    // modRoom(order5);
+   // deRoom(order5);
+   modRoomFacility(order7);
 	</script>
+	
 </body>
 </html>

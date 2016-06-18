@@ -9,10 +9,8 @@ include("DBconn.php");
 @$R_Name=$_POST["R_Name"];
 @$R_Area=$_POST["R_Area"]; 
 $result=mysql_query("UPDATE room SET B_ID=$B_ID,Floor=$Floor,L_ID=$L_ID,X=$X,Y=$Y,R_Name='$R_Name',R_Area='$R_Area' WHERE R_ID=$R_ID");
-if ($result) {
-         echo("成功修改信息！")
-}else{
-	echo("修改信息失败!");
-}
+
+         echo("成功修改信息！");
+
 mysql_close($conn);
  ?>
