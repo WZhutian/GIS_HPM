@@ -168,6 +168,7 @@ jQuery(document).ready(function($) {
                         console.log("getbuildinginfo获取的json：", data);
                         //处理building信息
                         WZT.Data.B_Name = data1['building']['B_Name'];
+                        $('.cd-product-intro h1').html(WZT.Data.B_Name);
                         WZT.Data.Floors = data1['building']['Floors'];
                         WZT.Data.Floors = 7;
                         WZT.Data.BaseMap = data1['building']['BaseMap'];
@@ -465,8 +466,12 @@ jQuery(document).ready(function($) {
         var add = 0;
         var sub = 1;
         if (A_Y > B_Y) {
-            [A_X, B_X] = [B_X, A_X];
-            [A_Y, B_Y] = [B_Y, A_Y];
+            var c=A_X;
+            A_X=B_X;
+            B_X=C;
+            C=A_Y;
+            A_Y=B_Y;
+            B_Y=A_Y;
         }
         if (A_X > B_X) {
             sub = -1;
@@ -668,6 +673,7 @@ jQuery(document).ready(function($) {
 
     $("#wm_close").click(function() {
         $("#floorInfo-pannel").hide();
+        $('.room-legend').removeClass('showInPoint');
     });
 
 
@@ -681,7 +687,7 @@ jQuery(document).ready(function($) {
     // WZT.edit_Floor = 0;
     function legendClick() {
         $('#content').html('')
-
+            $(this).addClass('showInPoint');
         var R_ID = $(this).data('r_id');
         console.log(R_ID)
         console.log(WZT.Data.Facilitys)
@@ -957,9 +963,7 @@ function SaveData() {
             })
             // data += stepDescription;
     });
-    console.log(data['Facility'])
-    console.log(JSON.stringify(data['Facility']))
-    modRoomFacility(data['Facility'])
+    modRoomFacility(data)
 
     function modRoomFacility(data) {
         var url = './php/modRoomFacility.php';
