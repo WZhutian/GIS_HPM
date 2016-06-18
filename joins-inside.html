@@ -97,7 +97,6 @@
       <li>
           <h3><i class="icon-user"></i>Welcome</h3>
             <p id="p-first">中国地质大学（武汉）位于武汉东湖国家自主创新示范区腹地。学校拥有国家4A级旅游景区——逸夫博物馆，是全国文明单位、湖北省最佳文明单位。校园环境优美，教育、科研、学术氛围浓厚，拥有现代化的教学楼群、图书馆、学生公寓和近万台随时上网的计算机等相关配套设施，为莘莘学子提供了良好的学习、生活和成长的环境。</p>
-            <!-- <img src="img/didalogo.png"> -->
             <a href="http://www.cug.edu.cn/new/">中国地质大学</a>
         </li>
      </ul>
@@ -113,11 +112,6 @@
   <li>
     <div id="cover1"><a href="TSP.html">路径导航<i class="icon-chevron-down"></i></a></div>
     <div id="icon"><i class="icon-truck" ></i></div>
-   <!--  <ul class="one" id="menu">
-      <li><a href="#" id="addpoint" data-toggle="false" onclick="addtsppoint()">添加点</a></li>
-      <li><a href="#">文字添加</a></li>
-      <li><a href="#"  onclick="shortestpath()">路径规划</a></li>
-    </ul> -->
   </li>
  
   <li>
@@ -148,7 +142,6 @@
         <input name="phonenumber" type="text" id="phonenumber">
         <p>描述<em>*</em></p>
         <textarea name="describe" cols="" rows="" id="describe"></textarea>
-        <!-- <input name="send" type="button" id="send" value="提交"> -->
         <p>请在地图上添加物品丢失的位置<em>*</em></p>
       </li>
     </ul>
@@ -262,10 +255,6 @@ var geojsonObject = {
       vectorSourceDrawing.clear();
       vectorSourceDrawingPoint.clear();
 //***********************************************************************************
-      //原先的
-      // var vectorSource = new ol.source.GeoJSON();
-      // var vectorSourceDrawing = new ol.source.GeoJSON();
-
       // 设置选中区域点的样式
       var pointStyles = (function() {
         var defaultStyle = [
@@ -347,26 +336,16 @@ var geojsonObject = {
         })
       });
 
-      // Generate and add random features
-      
-      // var newfeatures = geojsonToFeatures(
-      //   generateRandomPts(
-      //     map.getView().calculateExtent(map.getSize()),
-      //     50
-      //   )
-      // );
       var newfeatures;    //用来保存读出的json对象
-      fetchJSON('data/json/losteventgeojson.geojson')
+      fetchJSON('data/json/pointteest.geojson')
+      // fetchJSON('data/json/losteventgeojson.geojson')
 
         .then(function(points_fc) {
         newfeatures = points_fc;
-        // console.log(typeof(newfeatures));//对象形式
         vectorSource.addFeatures(geojsonToFeatures(points_fc, {
           featureProjection: 'EPSG:3857'
         }));
       });
-      // vectorSource.addFeatures(newfeatures);
-
       // Create a button and bind a click function
       var button = document.getElementById('drawtoggle');
       var draw;
@@ -412,17 +391,12 @@ var geojsonObject = {
           vectorSource.getFeatures().forEach(function(el) {
                 var isInside = el.get('isInside');
                 if (isInside != undefined && isInside === true) {
-                  // console.log(el.p.FID);
-                  console.log(el);
                   document.getElementById('popdiv').style.display = 'block';
                   add_line(el);
                 }
 
-                // var feat = formatDraw.writeFeature(el);
-
             });
           });
-
           // Add the interaction to the map
           map.addInteraction(draw);
         }

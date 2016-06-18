@@ -10,7 +10,6 @@
   <script src="assets/js/helpers.js"></script>
   <script src="assets/js/jquery-1.12.0.min.js"></script>
   <script src="assets/js/tspant.js"></script>
-  <!-- <script src="http://openlayers.org/en/v3.16.0/build/ol.js"></script> -->
   <!-- 右下角工具 -->
 <link rel="stylesheet" type="text/css" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
 
@@ -54,10 +53,6 @@
     -moz-box-shadow:0 0 25px #697cf5;
     -webkit-box-shadow:0 0 25px #697cf5;
     box-shadow:0 0 25px #8cb9f5;
-    /*绿光*/
-   /* -moz-box-shadow:0 0 25px #2aaa8a;
-    -webkit-box-shadow:0 0 25px #2aaa8a;
-    box-shadow:0 0 25px #2aaa8a;*/
 
     /*设置圆角*/
     -moz-border-radius: 15px;      /* Gecko browsers */
@@ -77,7 +72,6 @@
       <li>
           <h3><i class="icon-user"></i>Welcome</h3>
             <p id="p-first">中国地质大学（武汉）位于武汉东湖国家自主创新示范区腹地。学校拥有国家4A级旅游景区——逸夫博物馆，是全国文明单位、湖北省最佳文明单位。校园环境优美，教育、科研、学术氛围浓厚，拥有现代化的教学楼群、图书馆、学生公寓和近万台随时上网的计算机等相关配套设施，为莘莘学子提供了良好的学习、生活和成长的环境。</p>
-            <!-- <img src="img/didalogo.png"> -->
             <a href="http://www.cug.edu.cn/new/">中国地质大学</a>
         </li>
      </ul>
@@ -93,11 +87,6 @@
   <li>
     <div id="cover1"><a href="TSP.html">路径导航<i class="icon-chevron-down"></i></a></div>
     <div id="icon"><i class="icon-truck" ></i></div>
-   <!--  <ul class="one" id="menu">
-      <li><a href="#" id="addpoint" data-toggle="false" onclick="addtsppoint()">添加点</a></li>
-      <li><a href="#">文字添加</a></li>
-      <li><a href="#"  onclick="shortestpath()">路径规划</a></li>
-    </ul> -->
   </li>
  
   <li>
@@ -283,8 +272,6 @@ console.log(iconStyle);
       // We will share the geojson content to be able to use Turf
       var myPoints;
 
-      // fetchJSON('assets/data/key_shop_with_name_nantes_area.geojson')
-      // fetchJSON('data/json/losteventgeojson.geojson')
       fetchJSON('assets/data/pointtest2.geojson')
 
         .then(function(points_fc) {

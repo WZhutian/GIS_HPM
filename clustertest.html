@@ -59,12 +59,6 @@
         }
         .popstyle
         {
-          /*overflow: auto;
-              position:fixed;
-              right:30px; 
-              top:60px; */
-              /*width: 450px;
-            height: 240px;*/
             margin: 50px;
             background-color: #f0f3f9;
             /*position:relative;*/
@@ -137,23 +131,12 @@
   <li>
     <div id="cover1"><a href="clustertest.html" >报修管理<i class="icon-chevron-down"></i></a></div>
     <div id="icon"><i class="icon-briefcase" ></i></div>
-    <!-- <ul class="one" id="menu">
-      <li><a href="clustertest.html" >查看报修信息</a></li>
-      <li><a href="#">导出报修信息</a></li>
-      <li><a href="#">图表分析</a></li>
-      <li><a href="#">修理工管理</a></li>
-    </ul> -->
   </li>
   
   <!-- Start Services -->
   <li>
     <div id="cover1"><a href="TSP.html">路径导航<i class="icon-chevron-down"></i></a></div>
     <div id="icon"><i class="icon-truck" ></i></div>
-   <!--  <ul class="one" id="menu">
-      <li><a href="#" id="addpoint" data-toggle="false" onclick="addtsppoint()">添加点</a></li>
-      <li><a href="#">文字添加</a></li>
-      <li><a href="#"  onclick="shortestpath()">路径规划</a></li>
-    </ul> -->
   </li>
  
   <li>
@@ -184,9 +167,7 @@
         <input name="email" type="text" id="email">
         <p>描述<em>*</em></p>
         <textarea name="comment" cols="" rows="" id="comment"></textarea>
-        <input name="send" type="button" id="send" value="提交">
-        <input name="send" type="button" id="send" value="查看全部">
-        <input name="send" type="button" id="send" value="区域查询">
+        <p>请在地图上添加物品丢失的位置<em>*</em></p>
       </li>
     </ul>
   </li>
@@ -355,7 +336,6 @@
         fetchJSON('data/json/losteventgeojson.geojson')
         .then(function(points_fc) {
         newfeatures = points_fc;
-        // console.log(typeof(newfeatures));//对象形式
         vectorSource.addFeatures(geojsonToFeatures(points_fc, {
           featureProjection: 'EPSG:3857'
         }));
@@ -399,7 +379,6 @@
             "<td class='td_Item'><input type='text'  style='width:70px' class='stepName' value='" + el.U.location + "'></input></td>" +
             "<td class='td_Item'><input type='text' style='width:70px'  class='stepDescription' value='" + el.U.contactway + "'></td>" +
             "<td class='td_Oper'><input type='text' style='width:170px'  class='stepDescription' value='" + el.U.event + "'></td>" +
-            // "<td class='td_Oper'>" +            "</td>" +
         "</tr>");
     }
     //删除选择记录
