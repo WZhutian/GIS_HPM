@@ -172,11 +172,6 @@
     </ul>
   </li>
   
-  <!-- Start Search -->
-  <li id="search">
-    <input name="search" type="text" placeholder="Search" id="txt_search2">
-    <a href="#"><i class="icon-search"></i></a> 
-  </li>
 </ul>
     <div id="map" class="map"></div>
     <div id="popdiv" class="popstyle" style="display:none">
@@ -304,7 +299,7 @@
           distance: 40,
           source: new ol.source.Vector({
             //用于图上显示的KML文件
-            url: 'assets/data/pointclusterkml.kml',
+            url: 'data/kml/workorder2.kml',
             format: new ol.format.KML({
               extractStyles: false
             })
@@ -333,7 +328,7 @@
         source: vectorSource
       });
         // fetchJSON('assets/data/pointtest2.geojson')
-        fetchJSON('data/json/losteventgeojson.geojson')
+        fetchJSON('data/json/workorder.geojson')
         .then(function(points_fc) {
         newfeatures = points_fc;
         vectorSource.addFeatures(geojsonToFeatures(points_fc, {
@@ -348,7 +343,8 @@
         source:new ol.source.OSM()
     });
       var map = new ol.Map({
-        layers: [openStreetMapLayer, vector,vectorLayer],
+        layers: [openStreetMapLayer, vector],
+        // layers: [openStreetMapLayer, vector,vectorLayer],
         target: 'map',
         view: new ol.View({
           center: ol.proj.transform(

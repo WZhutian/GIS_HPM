@@ -166,10 +166,7 @@
   </li>
   
   <!-- Start Search -->
-  <li id="search">
-    <input name="search" type="text" placeholder="Search" id="txt_search2">
-    <a href="#"><i class="icon-search"></i></a> 
-  </li>
+
   
 </ul>
 
@@ -312,8 +309,8 @@ var polygonStyle = new ol.style.Style({
 //定义OL地图
     var map=new ol.Map({
      target: 'map',//定义显示容器
-      layers:[openStreetMapLayer,geoJSON_region],//按顺序添加图层
-      // layers:[geoJSON_region,openStreetMapLayer],//按顺序添加图层
+      // layers:[openStreetMapLayer,geoJSON_region],//按顺序添加图层
+      layers:[geoJSON_region,openStreetMapLayer],//按顺序添加图层
       controls: ol.control.defaults().extend([
           new ol.control.OverviewMap()
         ]),
